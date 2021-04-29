@@ -1,0 +1,13 @@
+{
+    "editor.tabSize": 2,
+    "editor.insertSpaces": false,
+    "javascript.format.semicolons": "remove",
+    "typescript.format.semicolons": "remove",
+    "prettier.semi": false,
+    "editor.formatOnSave": true,
+    "javascript.preferences.quoteStyle": "single",
+    "typescript.preferences.quoteStyle": "single",
+    "prettier.jsxSingleQuote": true,
+    "prettier.singleQuote": true,
+    "scssFormatter.singleQuote": true
+}
