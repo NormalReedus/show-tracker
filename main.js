@@ -3,7 +3,7 @@ require('dotenv').config()
 const { getJson, omdbGet, tvmGetNextEpHref } = require('./services')
 
 // How often to check for new data (so we don't make requests on all interactions)
-const UPDATE_INTERVAL_HOURS = 12
+const UPDATE_INTERVAL_HOURS = 6
 
 //! handle if omdb and tvm cannot find the resource
 
@@ -21,10 +21,8 @@ async function main() {
   const show = new Show('batwoman')
 
   setTimeout(() => {
-    console.log(show)
+    console.log(show.lastUpdated)
   }, 2000)
-
-  show._update()
 }
 
 // async function tvmGetShow(title) {
@@ -70,6 +68,7 @@ class Show {
   }
 
   async _init(title) {
+    // Everything depends on this going first
     const res = await omdbGet({ title })
 
     this.title = res.Title
@@ -78,10 +77,9 @@ class Show {
     this.totalSeasons = res.totalSeasons
 
     this._setNextAirDate()
-    this._setSeasons().then((res) => {
-      this._setNextRuntime()
-      this._setEpisodesLeft()
-    })
+    await this._setSeasons() // Last 2 depends on this
+    this._setNextRuntime()
+    this._setEpisodesLeft()
   }
 
   async _setNextAirDate() {
@@ -114,6 +112,7 @@ class Show {
     this.seasons = seasons
   }
 
+  //! Split function into something that finds next episode that can be used elsewhere as well as here
   async _setNextRuntime() {
     // local seasons array is 0 indexed
     let season = this.seasons[this.lastWatched.seasonNum]
@@ -156,10 +155,20 @@ class Show {
   }
 
   // Call this before accessing any props that are fetched from APIS
-  async _update() {
+  async update() {
     if (!this._shouldUpdate) return
 
     //* use above methods to update all data (kinda like _init, but using imdbID instead of title etc)
+    const res = await omdbGet({ imdbId: this.imdbId })
+    this.totalSeasons = res.totalSeasons // Needed for the rest
+
+    this._setNextAirDate()
+    await this._setSeasons()
+
+    // Await the last block to make sure update() always finished completely when awaited
+    await Promise.all([this._setNextRuntime(), this._setEpisodesLeft()])
+
+    this.lastUpdated = Date.now()
   }
 
   // Whether the update time interval has passed or not
