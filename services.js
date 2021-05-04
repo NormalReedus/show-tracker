@@ -1,5 +1,5 @@
-const fetch = require("node-fetch")
-const querystring = require("querystring")
+const fetch = require('node-fetch')
+const querystring = require('querystring')
 
 // Returns the JSON response of a GET request to the given api
 async function getJson(reqUrl) {
@@ -8,7 +8,7 @@ async function getJson(reqUrl) {
     res = await fetch(reqUrl)
     content = await res.json()
   } catch (err) {
-    console.error("Could not fetch: " + reqUrl, err)
+    console.error('Could not fetch: ' + reqUrl, err)
     //! Do stuff
     return
   }
@@ -40,7 +40,7 @@ async function omdbGet({ imdbId, seasonNum, title }) {
 async function tvmGetNextEpHref(imdbId) {
   const tvmBaseUrl = process.env.TVMAZE_API_URL
 
-  const baseUrl = tvmBaseUrl + "/lookup/shows"
+  const baseUrl = tvmBaseUrl + '/lookup/shows'
 
   const queryParams = {
     imdb: imdbId,
@@ -51,7 +51,7 @@ async function tvmGetNextEpHref(imdbId) {
   const res = await getJson(reqUrl)
 
   if (!res._links.nextepisode) {
-    console.log("There is no next airing episode for IMDB: " + imdbId)
+    console.log('There is no next airing episode for IMDB: ' + imdbId)
     return
   }
 
@@ -61,7 +61,7 @@ async function tvmGetNextEpHref(imdbId) {
 //* UTILS
 function urlSerializer(baseUrl, params) {
   const queryParams = querystring.stringify(params)
-  return baseUrl + "?" + queryParams
+  return baseUrl + '?' + queryParams
 }
 
 module.exports = {
@@ -69,3 +69,13 @@ module.exports = {
   omdbGet,
   tvmGetNextEpHref,
 }
+
+// const testUrl = process.env.TVMAZE_API_URL + '/lookup/shows?imdb=tt8712204'
+// console.log(await getJson(testUrl))
+
+// console.log(omdbGetSeason('123&this'))
+// console.log(urlSerializer('http://google.com', { hello: 'alright', this: 1337 }))
+// console.log(await omdbGet({ imdbId: 'tt8712204' }))
+// console.log(await tvmGetEpisode(await tvmGetNextEpHref('tt8712204')))
+
+// console.log(await tvmGetShow("batwoman"))
