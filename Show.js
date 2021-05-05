@@ -5,10 +5,9 @@ const UPDATE_INTERVAL_HOURS = 6
 
 //! handle if omdb and tvm cannot find the resource on init
 class Show {
-  #imdbId
   #seasons
 
-  constructor(title) {
+  constructor() {
     this.lastUpdated = Date.now()
     this.lastWatched = {
       seasonNum: 0,
@@ -18,25 +17,33 @@ class Show {
     // Null props are set in init()
     this.title = null
     this.poster = null
-    this.#imdbId = null
+    this.imdbId = null
     this.totalSeasons = null //? private? - should this be displayed in frontend?
     this.#seasons = null
     this.nextAirDate = null // Next airing ep (not the next after the one watched)
     this.nextRuntime = null // Next after the one watched
     this.episodesLeft = null
 
-    this.#init(title)
+    // //! Check if init goes right (make it return something) and delete this object from category again if it's shit
+    // this.#init(title)
   }
 
   //* SETTING / UPDATING PROPS
 
-  async #init(title) {
+  async init(title) {
     // Everything depends on this going first
-    const res = await omdbGet({ title })
+    let res
+    try {
+      res = await omdbGet({ title })
+    } catch (err) {
+      //! Show err.message in frontend
+      console.error(err)
+      return
+    }
 
     this.title = res.Title
     this.poster = res.Poster
-    this.#imdbId = res.imdbID
+    this.imdbId = res.imdbID
     this.totalSeasons = res.totalSeasons
 
     this.#setNextAirDate()
@@ -46,7 +53,7 @@ class Show {
   }
 
   async #setNextAirDate() {
-    const href = await tvmGetNextEpHref(this.#imdbId)
+    const href = await tvmGetNextEpHref(this.imdbId)
 
     if (!href) {
       this.nextAirDate = false
@@ -61,7 +68,7 @@ class Show {
     const seasonPromises = []
     for (let s = 1; s <= this.totalSeasons; s++) {
       // omdb is 1 indexed
-      const season = omdbGet({ imdbId: this.#imdbId, seasonNum: s })
+      const season = omdbGet({ imdbId: this.imdbId, seasonNum: s })
       seasonPromises.push(season)
     }
 
@@ -77,27 +84,6 @@ class Show {
 
   //! Split function into something that finds next episode that can be used elsewhere as well as here
   async #setNextRuntime() {
-    // // local seasons array is 0 indexed
-    // let season = this.#currentSeason
-    // // let nextEp
-
-    // // if last watched was last of season and another season exists
-    // if (
-    //   this.lastWatched.episodeNum === season.Episodes.length &&
-    //   this.lastWatched.seasonNum + 1 < this.totalSeasons
-    // ) {
-    //   // check for ep in next season
-    //   season = this.seasons[this.lastWatched.seasonNum + 1]
-    //   nextEp = season.Episodes[0]
-    // } else if (this.lastWatched.episodeNum === season.Episodes.length) {
-    //   // last ep of last season
-    //   this.nextRuntime = false
-    //   return
-    // } else {
-    //   // there are more episodes in this season
-    //   nextEp = season.Episodes[this.lastWatched.episodeNum]
-    // }
-
     const nextEp = this.#nextEpisode
     if (!nextEp) {
       this.nextRuntime = false
@@ -165,7 +151,7 @@ class Show {
   async update() {
     if (!this.#shouldUpdate) return
 
-    const res = await omdbGet({ imdbId: this.#imdbId })
+    const res = await omdbGet({ imdbId: this.imdbId })
     this.totalSeasons = res.totalSeasons // Needed for the rest
 
     this.#setNextAirDate()

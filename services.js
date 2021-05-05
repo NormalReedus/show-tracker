@@ -8,9 +8,7 @@ async function getJson(reqUrl) {
     res = await fetch(reqUrl)
     content = await res.json()
   } catch (err) {
-    console.error('Could not fetch: ' + reqUrl, err)
-    //! Do stuff
-    return
+    throw new Error('Could not fetch: ' + reqUrl)
   }
 
   return content
@@ -33,6 +31,19 @@ async function omdbGet({ imdbId, seasonNum, title }) {
 
   const res = await getJson(reqUrl)
 
+  // Only when creating show object are we using title
+  if (title && res.Type !== 'series') {
+    throw new Error('Cannot find show on OMDB: ' + title)
+  }
+
+  if (res.Response === 'False') {
+    throw new Error(
+      'Cannot find resource on OMDB: ' + imdbId + ' - ' + seasonNum
+        ? 'Season: ' + seasonNum
+        : ''
+    )
+  }
+
   return res
 }
 
@@ -49,6 +60,11 @@ async function tvmGetNextEpHref(imdbId) {
   const reqUrl = urlSerializer(baseUrl, queryParams)
 
   const res = await getJson(reqUrl)
+
+  if (!res) {
+    console.log('There was an error finding the next air date for: ' + imdbId)
+    return
+  }
 
   if (!res._links.nextepisode) {
     console.log('There is no next airing episode for IMDB: ' + imdbId)
