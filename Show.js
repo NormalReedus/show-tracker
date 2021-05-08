@@ -23,23 +23,14 @@ class Show {
     this.nextAirDate = null // Next airing ep (not the next after the one watched)
     this.nextRuntime = null // Next after the one watched
     this.episodesLeft = null
-
-    // //! Check if init goes right (make it return something) and delete this object from category again if it's shit
-    // this.#init(title)
   }
 
   //* SETTING / UPDATING PROPS
 
+  // No error handling here, this is done in Group
   async init(title) {
     // Everything depends on this going first
-    let res
-    try {
-      res = await omdbGet({ title })
-    } catch (err) {
-      //! Show err.message in frontend
-      console.error(err)
-      return
-    }
+    const res = await omdbGet({ title })
 
     this.title = res.Title
     this.poster = res.Poster

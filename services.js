@@ -62,7 +62,9 @@ async function tvmGetNextEpHref(imdbId) {
   const res = await getJson(reqUrl)
 
   if (!res) {
-    console.log('There was an error finding the next air date for: ' + imdbId)
+    throw new Error(
+      'There was an error finding the next air date for: ' + imdbId
+    )
     return
   }
 

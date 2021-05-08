@@ -15,8 +15,16 @@ class Group {
     }
 
     const show = new Show()
-    //! Check if init goes right (make it return something) and delete this object from category again if it's shit
-    await show.init(title)
+
+    // All processes in init will throw error if something goes fatally wrong
+    // in which case we just don't save the show in this.shows
+    try {
+      await show.init(title)
+    } catch (err) {
+      //! Message to frontend
+      console.error('Could not create show with title: ' + title)
+      return
+    }
 
     this.shows.push(show)
   }
