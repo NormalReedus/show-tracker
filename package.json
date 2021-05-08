@@ -1,5 +1,5 @@
 {
-	"name": "show-tracker",
+	"name": "showtracker",
 	"main": "app/app.js",
 	"version": "8.0.3",
 	"description": "An android app for tracking your watching progress of shows.",
@@ -34,6 +34,9 @@
 		"omdb",
 		"tvshows"
 	],
+	"scripts": {
+		"dev": "ns run android"
+	},
 	"dependencies": {
 		"@nativescript/core": "~8.0.0",
 		"@nativescript/theme": "~3.0.1",
