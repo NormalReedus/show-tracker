@@ -35,7 +35,7 @@
 		"tvshows"
 	],
 	"scripts": {
-		"dev": "ns run android"
+		"dev": "ns run android --no-hmr"
 	},
 	"dependencies": {
 		"@nativescript/core": "~8.0.0",

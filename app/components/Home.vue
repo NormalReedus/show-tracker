@@ -1,41 +1,47 @@
 <template>
-  <Page class="ns-dark" actionBarHidden="true">
-    <!-- <ActionBar>
+	<Page class="ns-dark" actionBarHidden="true">
+		<!-- <ActionBar>
       <Label text="Show Tracker" />
     </ActionBar> -->
 
-    <GridLayout>
-      <Label class="info">
-        <FormattedString>
-          <Span class="fas" text.decode="&#xf135; " />
-          <Span :text="message" />
-        </FormattedString>
-      </Label>
-    </GridLayout>
-  </Page>
+		<TabView
+			v-model="selectedIndex"
+			@selectedIndexChange="indexChange"
+			androidTabsPosition="bottom"
+		>
+			<TabViewItem title="One">
+				<ScrollView>
+					<Label :text="message" />
+				</ScrollView>
+			</TabViewItem>
+			<TabViewItem title="Two">
+				<Label text="Content for Tab 2" />
+			</TabViewItem>
+		</TabView>
+	</Page>
 </template>
 
 <script>
+import Group from '@/backend/Group'
+
 export default {
-  computed: {
-    message() {
-      return "Show Tracker";
-    }
-  }
-};
+	data: () => ({
+		selectedIndex: 0,
+		message: 'Show Tracker',
+	}),
+
+	methods: {
+		async indexChange(args) {
+			// let newIndex = args.value
+			// console.log('Current tab index: ' + this.selectedIndex)
+			const group = new Group('Magnus & Helena')
+			await group.addShow('batwoman')
+			console.log(group)
+		},
+	},
+}
 </script>
 
 <style scoped lang="scss">
-@import "@nativescript/theme/scss/variables/blue";
-
-// Custom styles
-.fas {
-  @include colorize($color: accent);
-}
-
-.info {
-  font-size: 20;
-  horizontal-align: center;
-  vertical-align: center;
-}
+@import '@nativescript/theme/scss/variables/blue';
 </style>

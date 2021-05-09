@@ -9,5 +9,6 @@
     "typescript.preferences.quoteStyle": "single",
     "prettier.jsxSingleQuote": true,
     "prettier.singleQuote": true,
-    "scssFormatter.singleQuote": true
+    "scssFormatter.singleQuote": true,
+    "prettier.arrowParens": "avoid"
 }
