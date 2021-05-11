@@ -1,7 +1,7 @@
 {
 	"name": "showtracker",
 	"main": "app/app.js",
-	"version": "8.0.3",
+	"version": "0.1.0",
 	"description": "An android app for tracking your watching progress of shows.",
 	"author": "Magnus Bendix Borregaard",
 	"license": "MIT",
@@ -35,6 +35,7 @@
 		"tvshows"
 	],
 	"scripts": {
+		"emu": "scripts/emulate",
 		"dev": "ns run android --no-hmr"
 	},
 	"dependencies": {
@@ -44,10 +45,10 @@
 		"@triniwiz/nativescript-toasty": "^4.1.3",
 		"@vue/devtools": "^5.3.4",
 		"nativescript-vue": "~2.9.0",
-		"nativescript-vue-devtools": "^1.5.1",
 		"node-fetch": "^2.6.1"
 	},
 	"devDependencies": {
+		"nativescript-vue-devtools": "^1.5.1",
 		"@nativescript/android": "8.0.0",
 		"@nativescript/webpack": "beta",
 		"dotenv": "^8.2.0",

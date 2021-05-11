@@ -1,10 +1,10 @@
-import VueDevtools from "nativescript-vue-devtools";
-import Vue from "nativescript-vue";
+import VueDevtools from 'nativescript-vue-devtools'
+import Vue from 'nativescript-vue'
 
-Vue.use(VueDevtools);
+Vue.use(VueDevtools)
 
-import Home from "./components/Home";
+import Home from './components/Home'
 
 new Vue({
-  render: h => h("frame", [h(Home)])
-}).$start();
+	render: h => h('frame', [h(Home)]),
+}).$start()

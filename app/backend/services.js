@@ -1,5 +1,3 @@
-const fetch = require('node-fetch').default
-// import fetch from 'node-fetch'
 const querystring = require('querystring')
 
 // Returns the JSON response of a GET request to the given api

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+rm -rf platforms
+npx vue-devtools &
+emulator @Pixel_3a_API_30_x86 &
