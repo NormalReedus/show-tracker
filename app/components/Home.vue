@@ -1,26 +1,35 @@
 <template>
 	<Page class="ns-dark" actionBarHidden="true">
-		<!-- <ActionBar>
-      <Label text="Show Tracker" />
-    </ActionBar> -->
-
-		<TabView v-if="this.groups.length != 0" androidTabsPosition="bottom">
-			<TabViewItem
-				:title="group.title"
-				v-for="group of groups"
-				:key="group.title"
-			>
-				<ScrollView>
-					<FlexboxLayout
-						v-if="group.shows.length > 0"
-						flexWrap="wrap"
-						paddingTop="20"
-						@tap="exportShows"
-						@longPress="importShows"
-					>
-						<Show v-for="show of group.shows" :key="show.imdbId" :show="show" />
-					</FlexboxLayout>
-				</ScrollView>
+		<TabView androidTabsPosition="bottom">
+			<TabViewItem iconSource="~/assets/show.png">
+				<StackLayout>
+					<TabView v-if="this.groups.length != 0">
+						<TabViewItem
+							:title="group.title"
+							v-for="group of groups"
+							:key="group.title"
+						>
+							<ScrollView>
+								<FlexboxLayout
+									v-if="group.shows.length > 0"
+									flexWrap="wrap"
+									paddingTop="20"
+									@tap="exportShows"
+									@longPress="importShows"
+								>
+									<Show
+										v-for="show of group.shows"
+										:key="show.imdbId"
+										:show="show"
+									/>
+								</FlexboxLayout>
+							</ScrollView>
+						</TabViewItem>
+					</TabView>
+				</StackLayout>
+			</TabViewItem>
+			<TabViewItem iconSource="~/assets/gear.png">
+				<StackLayout> </StackLayout>
 			</TabViewItem>
 		</TabView>
 	</Page>
@@ -43,6 +52,9 @@ export default {
 	}),
 
 	methods: {
+		test() {
+			console.log('test')
+		},
 		async indexChange(args) {
 			// let newIndex = args.value
 			// console.log('Current tab index: ' + this.selectedIndex)
