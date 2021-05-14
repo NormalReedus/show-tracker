@@ -1,7 +1,36 @@
 const Show = require('./Show')
-// import Show from './Show'
 
 class Group {
+	static importGroups(jsonData) {
+		// objects with no methods etc
+		let staticData
+
+		try {
+			staticData = JSON.parse(jsonData)
+		} catch (err) {
+			//! Show alert popup
+			console.log(err, 'Cannot parse JSON groups')
+			return
+		}
+
+		const groups = staticData.map(staticGroup => {
+			// Create actual group object from the static parsed json data
+			const group = new Group(staticGroup.title)
+
+			//! Import shows, should return array, loop through array and addShow
+			const shows = Show.importShows(staticGroup.shows)
+
+			for (const show of shows) {
+				// Does not use addShow() since we already have the fully generated show
+				group.shows.push(show)
+			}
+
+			return group
+		})
+
+		return groups
+	}
+
 	constructor(title) {
 		this.title = title
 		this.shows = []

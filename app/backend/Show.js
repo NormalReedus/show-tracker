@@ -5,6 +5,21 @@ const UPDATE_INTERVAL_HOURS = 6
 
 //! handle if omdb and tvm cannot find the resource on init
 class Show {
+	// Takes parsed shows from json, that do not have methods etc
+	static importShows(staticShows) {
+		console.log(staticShows)
+
+		const shows = staticShows.map(staticShow => {
+			// Make new show with methods etc and overwrite all the props that also exist on staticShow with those of staticShow
+			// We don't use init since we have all the props
+			const show = Object.assign(new Show(), staticShow)
+
+			return show
+		})
+
+		return shows
+	}
+
 	constructor() {
 		this.lastUpdated = Date.now()
 		this.lastWatched = {
@@ -16,8 +31,8 @@ class Show {
 		this.title = null
 		this.poster = null
 		this.imdbId = null
-		this.totalSeasons = null //? private? - should this be displayed in frontend?
-		this._seasons = null
+		this.totalSeasons = null
+		this.seasons = null
 		this.nextAirDate = null // Next airing ep (not the next after the one watched)
 		this.nextRuntime = null // Next after the one watched
 		this.episodesLeft = null
@@ -68,7 +83,7 @@ class Show {
 			season.Episodes = season.Episodes.filter(ep => ep.Released !== 'N/A')
 		}
 
-		this._seasons = seasons
+		this.seasons = seasons
 	}
 
 	//! Split function into something that finds next episode that can be used elsewhere as well as here
@@ -91,7 +106,7 @@ class Show {
 		// only loop through seasons we have not fully watched
 		// use seasonNum directly since this.seasons is 0 indexed (in contrast to the API)
 		for (let s = this.lastWatched.seasonNum; s < this.totalSeasons; s++) {
-			epsInSeasons += this._seasons[s].Episodes.length
+			epsInSeasons += this.seasons[s].Episodes.length
 		}
 
 		// Subtract the number of eps watched in current season
@@ -108,11 +123,11 @@ class Show {
 	//* SHORTCUTS
 
 	get _currentSeason() {
-		return this._seasons[this.lastWatched.seasonNum]
+		return this.seasons[this.lastWatched.seasonNum]
 	}
 
 	get _nextSeason() {
-		return this._seasons[this.lastWatched.seasonNum + 1]
+		return this.seasons[this.lastWatched.seasonNum + 1]
 	}
 
 	get _nextEpisode() {
@@ -159,10 +174,10 @@ class Show {
 		if (seas !== 0 && ep === 0) return
 
 		// Don't do anything if season does not exist
-		if (!this._seasons[seas]) return
+		if (!this.seasons[seas]) return
 
 		// No negative eps or higher than season length
-		if (ep < 0 || ep > this._seasons[seas].Episodes.length) return
+		if (ep < 0 || ep > this.seasons[seas].Episodes.length) return
 
 		this.lastWatched = {
 			seasonNum: seas,
