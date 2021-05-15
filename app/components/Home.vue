@@ -14,7 +14,7 @@
 								<FlexboxLayout
 									v-if="group.shows.length > 0"
 									flexWrap="wrap"
-									paddingTop="20"
+									paddingTop="25"
 								>
 									<Show
 										v-for="show of group.shows"

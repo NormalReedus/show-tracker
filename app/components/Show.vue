@@ -1,5 +1,10 @@
 <template>
-	<FlexboxLayout class="show-card" @tap="showModal" @doubleTap="cardDoubleTap">
+	<FlexboxLayout
+		class="show-card"
+		@tap="showModal"
+		@doubleTap="incrementEpisode"
+		@longPress="decrementEpisode"
+	>
 		<Image
 			:src="show.poster"
 			loadMode="async"
@@ -37,11 +42,11 @@ export default {
 	},
 
 	methods: {
-		cardDoubleTap() {
-			this.incrementEpisode()
-		},
 		incrementEpisode() {
 			this.show.watchEpisode()
+		},
+		decrementEpisode() {
+			this.show.unwatchEpisode()
 		},
 		showModal() {
 			this.$showModal(ShowModal, {

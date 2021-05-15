@@ -161,7 +161,21 @@ class Show {
 	// Returns a list of season numbers
 	// 0th indexed since it is used by client to pick the lastWatched.seasonNum
 	get seasonNums() {
-		return this.seasons.map((_, index) => index)
+		const indices = this.seasons.map((_, index) => index)
+		// We add one seasonNum to the list, since client can have watched the last season
+		// e.g. with 8 seasons indices could be 0, ..., 7, but we want client to be able to say they have watched the whole 8th season as well
+		indices.push(indices.length)
+
+		return indices
+	}
+
+	getSeasonEpisodeNums(seasonNum) {
+		// Trying to get eps for season after the last (when all have been watched), you can only set ep to 0
+		if (seasonNum === this.seasons.length) {
+			return [0]
+		}
+
+		return this.seasons[seasonNum].Episodes.map((_, index) => index)
 	}
 
 	//* CONTROLLERS
@@ -182,12 +196,22 @@ class Show {
 		this.lastUpdated = Date.now()
 	}
 
-	async setEpisode(seas, ep) {
+	async setProgress({ seas, ep }) {
 		await this.update()
 
-		// Setting season to last season (everything watched) only allows episode to be 0
 		// since you cannot have watched episodes after watching the last season
-		if (seas === this.seasons.length && ep !== 0) return //TODO: Giv fejl-popup
+		// if (seas === this.seasons.length && ep !== 0) return //TODO: Giv fejl-popup
+
+		// Setting season to last season (everything watched) only allows episode to be 0, so it is set to 0 regardless of ep's value
+		if (seas === this.seasons.length) {
+			this.lastWatched = {
+				seasonNum: seas,
+				episodeNum: 0,
+			}
+
+			await this._setEpisodesLeft()
+			return
+		}
 
 		// // Don't do anything if season does not exist
 		// if (!this.seasons[seas]) return //! HVIS SÆSON ER 1 MERE END DE EKSISTERENDE skal man kun kunne sætte ep til 0
