@@ -1,31 +1,23 @@
 <template>
 	<StackLayout>
-		<Image
-			:src="show.poster"
-			loadMode="async"
-			stretch="aspectFit"
-			class="bg-image"
-		/>
-		<StackLayout class="data-container" orientation="horizontal">
-			<StackLayout>
-				<Label
-					:text="
-						`S: ${show.lastWatched.seasonNum} E: ${show.lastWatched.episodeNum}`
-					"
-				/>
-				<Label
-					v-if="show.nextAirDate"
-					:text="`Next ep.: ${show.nextAirDate}`"
-				/>
-				<Label :text="`Runtime: ${show.nextRuntime}`" />
-				<Label :text="`Episodes left: ${show.episodesLeft}`" />
+		<Image :src="show.poster" loadMode="async" stretch="aspectFit" />
+
+		<FlexboxLayout class="data-section" width="100%">
+			<FlexboxLayout class="progress-container container">
+				<ProgressIndicator :lastWatched="show.lastWatched" width="100%" />
+			</FlexboxLayout>
+			<FlexboxLayout class="data-container container">
+				<Label class="text-center" v-if="show.nextAirDate" :text="`Next ep.: ${show.nextAirDate}`" />
+				<Label class="text-center" :text="`Runtime: ${show.nextRuntime}`" />
+				<Label class="text-center" :text="`Episodes left: ${show.episodesLeft}`" />
 
 				<!-- number spinner til sæs og ep, + og - til episoder (lav knap der åbner modal), favorite i hjørnet af billede, slet show-knap  -->
-			</StackLayout>
-			<StackLayout width="100%">
-				<Button @tap="setProgress">Set progress</Button>
-			</StackLayout>
-		</StackLayout>
+			</FlexboxLayout>
+		</FlexboxLayout>
+		<ButtonWrapper>
+			<Button col="0" row="0" @tap="setProgress" class="button -primary">Set progress</Button>
+			<Button col="2" row="0" class="button">Remove show</Button>
+		</ButtonWrapper>
 	</StackLayout>
 </template>
 
@@ -33,7 +25,15 @@
 //TODO: display Show details as well as controls / inputs
 //TODO: use this.$showModal with passed props in Home to show this modal
 import ProgressListPicker from '@/components/ProgressListPicker'
+import ProgressIndicator from '@/components/ProgressIndicator'
+import ButtonWrapper from '@/components/ButtonWrapper'
+
 export default {
+	components: {
+		ProgressIndicator,
+		ButtonWrapper,
+	},
+
 	props: {
 		show: {
 			type: Object,
@@ -60,7 +60,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.data-section {
+	// Taken from button styling
+	padding: 16 16 0;
+	.container + .container {
+		margin-left: 10;
+	}
+}
+
+.progress-container {
+	justify-content: center;
+	width: 50%;
+}
+
 .data-container {
-	padding: 25;
+	flex-direction: column;
+	width: 50%;
+}
+
+.button {
+	width: 100%;
 }
 </style>
