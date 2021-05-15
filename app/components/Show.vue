@@ -5,6 +5,7 @@
 		height="300"
 		alignItems="center"
 		marginTop="10"
+		@tap="showModal"
 	>
 		<Image
 			:src="show.poster"
@@ -24,11 +25,24 @@
 </template>
 
 <script>
+import ShowModal from '@/components/ShowModal'
 export default {
 	props: {
 		show: {
 			type: Object,
 			required: true,
+		},
+	},
+
+	methods: {
+		showModal() {
+			this.$showModal(ShowModal, {
+				// fullscreen: true,
+				stretched: true,
+				props: {
+					show: this.show,
+				},
+			})
 		},
 	},
 }

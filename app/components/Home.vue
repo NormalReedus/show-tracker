@@ -14,8 +14,6 @@
 									v-if="group.shows.length > 0"
 									flexWrap="wrap"
 									paddingTop="20"
-									@tap="exportShows"
-									@longPress="importShows"
 								>
 									<Show
 										v-for="show of group.shows"
