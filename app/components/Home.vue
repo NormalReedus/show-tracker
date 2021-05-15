@@ -9,6 +9,7 @@
 							v-for="group of groups"
 							:key="group.title"
 						>
+							<!-- search bar -->
 							<ScrollView>
 								<FlexboxLayout
 									v-if="group.shows.length > 0"

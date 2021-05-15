@@ -36,7 +36,7 @@
 	],
 	"scripts": {
 		"emu": "scripts/emulate",
-		"dev": "ns run android --no-hmr"
+		"dev": "ns debug android --no-hmr"
 	},
 	"dependencies": {
 		"@nativescript/core": "~8.0.0",

@@ -12,15 +12,22 @@
 			background="linear-gradient(to bottom, transparent, black)"
 		/>
 		<!-- sæt farve der matcher baggrund -->
+		<StackLayout class="data-container">
+			<Label
+				:text="
+					`S: ${show.lastWatched.seasonNum} E: ${show.lastWatched.episodeNum}`
+				"
+			/>
+			<Label v-if="show.nextAirDate" :text="`Next ep.: ${show.nextAirDate}`" />
+			<Label :text="`Runtime: ${show.nextRuntime}`" />
+			<Label :text="`Episodes left: ${show.episodesLeft}`" />
+			<!-- <ListPicker
+				:items="this.show.seasonNums"
+				:selectedIndex="this.show.lastWatched.seasonNum"
+			></ListPicker> -->
 
-		<Label
-			:text="
-				`S: ${show.lastWatched.seasonNum} E: ${show.lastWatched.episodeNum}`
-			"
-		/>
-		<Label v-if="show.nextAirDate" :text="`Next ep.: ${show.nextAirDate}`" />
-		<Label :text="`Runtime: ${show.nextRuntime}`" />
-		<Label :text="`Episodes left: ${show.episodesLeft}`" />
+			<!-- number spinner til sæs og ep, + og - til episoder (lav knap der åbner modal), favorite i hjørnet af billede, slet show-knap  -->
+		</StackLayout>
 	</StackLayout>
 </template>
 
@@ -37,4 +44,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.data-container {
+	padding: 25;
+}
+</style>
