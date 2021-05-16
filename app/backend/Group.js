@@ -52,11 +52,7 @@ class Group {
 			await show.init(title)
 		} catch (err) {
 			//! Message to frontend
-			console.error(
-				'\x1b[31m',
-				'Could not create show with title: ' + title,
-				'\x1b[0m'
-			)
+			console.error('\x1b[31m', 'Could not create show with title: ' + title, '\x1b[0m')
 			console.error(err)
 			return
 		}
@@ -66,13 +62,12 @@ class Group {
 
 	removeShow(imdbId) {
 		const showIndex = this.shows.findIndex(show => show.imdbId === imdbId)
+
 		this.shows.splice(showIndex, 1)
 	}
 
 	_showExists(title) {
-		const match = this.shows.find(
-			show => show.title.toLowerCase() === title.toLowerCase()
-		)
+		const match = this.shows.find(show => show.title.toLowerCase() === title.toLowerCase())
 
 		return match
 	}

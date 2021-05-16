@@ -1,25 +1,18 @@
 <template>
 	<Page class="ns-dark" actionBarHidden="true">
 		<TabView androidTabsPosition="bottom">
-			<TabViewItem iconSource="~/assets/show.png">
+			<TabViewItem title="" class="fas tab-icon">
 				<StackLayout>
 					<TabView v-if="this.groups.length != 0">
-						<TabViewItem
-							:title="group.title"
-							v-for="group of groups"
-							:key="group.title"
-						>
+						<TabViewItem :title="group.title" v-for="group of groups" :key="group.title" class="tab-text">
 							<!-- search bar -->
 							<ScrollView>
-								<FlexboxLayout
-									v-if="group.shows.length > 0"
-									flexWrap="wrap"
-									paddingTop="25"
-								>
+								<FlexboxLayout v-if="group.shows.length > 0" flexWrap="wrap" paddingTop="25">
 									<Show
 										v-for="show of group.shows"
 										:key="show.imdbId"
 										:show="show"
+										@removeShow="group.removeShow($event)"
 									/>
 								</FlexboxLayout>
 							</ScrollView>
@@ -27,22 +20,34 @@
 					</TabView>
 				</StackLayout>
 			</TabViewItem>
-			<TabViewItem iconSource="~/assets/gear.png">
-				<StackLayout> </StackLayout>
+			<!-- gear -->
+			<TabViewItem title="" class="fas tab-icon">
+				<Settings />
 			</TabViewItem>
 		</TabView>
 	</Page>
 </template>
 
 <script>
+// TODO: Wrap show list in component (like settings)
+// TODO: Add show - FAB or placeholder show with big + icon?
+// TODO: Add favorite indicator to shows
+// TODO: Add favorite indicator to show modals that can toggle
+// TODO: Add search bar / sorting (with favorites)
+// TODO: Test without internet (will displaying posters work?)
+// TODO: Show errors when trying to use API but there's no internet (unless they fail silently which might be okay sometimes)
+// TODO: Add saving to storage - should everything be saved every time or just what is edited? Finding the edited content might be a bigger overhead
+
 const clipboard = require('nativescript-clipboard')
 
 import Group from '~/backend/Group'
-import Show from '@/components/Show.vue'
+import Show from '@/components/Show'
+import Settings from '@/components/Settings'
 
 export default {
 	components: {
 		Show,
+		Settings,
 	},
 	data: () => ({
 		selectedIndex: 0,
@@ -51,16 +56,6 @@ export default {
 	}),
 
 	methods: {
-		test() {
-			console.log('test')
-		},
-		async indexChange(args) {
-			// let newIndex = args.value
-			// console.log('Current tab index: ' + this.selectedIndex)
-			// this.export()
-			console.log(this.selectedIndex)
-		},
-
 		async exportShows() {
 			// console.log(JSON.stringify(this.groups))
 			try {
@@ -123,4 +118,13 @@ export default {
 
 <style scoped lang="scss">
 @import '@nativescript/theme/scss/variables/blue';
+
+.tab-icon {
+	font-size: 18;
+}
+
+.tab-text {
+	// Have to reset the font-size from tab-icon for some reason
+	font-size: 12;
+}
 </style>

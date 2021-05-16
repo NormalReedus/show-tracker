@@ -1,7 +1,7 @@
 <template>
 	<FlexboxLayout class="show-card" @tap="showModal" @doubleTap="incrementEpisode" @longPress="decrementEpisode">
 		<Image :src="show.poster" loadMode="async" stretch="aspectFit" class="poster" />
-		<ProgressIndicator :lastWatched="show.lastWatched" marginTop="5" width="60%" />
+		<ProgressIndicator :lastWatched="show.lastWatched" marginTop="5" width="60%" justifyContent="space-around" />
 	</FlexboxLayout>
 </template>
 
@@ -27,14 +27,17 @@ export default {
 		decrementEpisode() {
 			this.show.unwatchEpisode()
 		},
-		showModal() {
-			this.$showModal(ShowModal, {
-				// fullscreen: true,
+		async showModal() {
+			const removeShow = await this.$showModal(ShowModal, {
 				stretched: true,
 				props: {
 					show: this.show,
 				},
 			})
+
+			if (removeShow) {
+				this.$emit('removeShow', this.show.imdbId)
+			}
 		},
 	},
 }

@@ -1,5 +1,8 @@
 {
-	"name": "showtracker",
+	"name": "org.nativescript.showtracker",
+	"nativescript": {
+		"id": "org.nativescript.showtracker"
+	},
 	"main": "app/app.js",
 	"version": "0.1.0",
 	"description": "An android app for tracking your watching progress of shows.",

@@ -4,34 +4,28 @@
 
 		<FlexboxLayout class="data-section" width="100%">
 			<FlexboxLayout class="progress-container container">
-				<ProgressIndicator :lastWatched="show.lastWatched" width="100%" />
+				<ProgressIndicator :lastWatched="show.lastWatched" width="100%" flexDirection="column" />
 			</FlexboxLayout>
-			<FlexboxLayout class="data-container container">
-				<Label class="text-center" v-if="show.nextAirDate" :text="`Next ep.: ${show.nextAirDate}`" />
-				<Label class="text-center" :text="`Runtime: ${show.nextRuntime}`" />
-				<Label class="text-center" :text="`Episodes left: ${show.episodesLeft}`" />
-
-				<!-- number spinner til sæs og ep, + og - til episoder (lav knap der åbner modal), favorite i hjørnet af billede, slet show-knap  -->
-			</FlexboxLayout>
+			<MiscData class="container" :show="show" />
 		</FlexboxLayout>
 		<ButtonWrapper>
 			<Button col="0" row="0" @tap="setProgress" class="button -primary">Set progress</Button>
-			<Button col="2" row="0" class="button">Remove show</Button>
+			<Button col="2" row="0" class="button" @tap="removeShow">Remove show</Button>
 		</ButtonWrapper>
 	</StackLayout>
 </template>
 
 <script>
-//TODO: display Show details as well as controls / inputs
-//TODO: use this.$showModal with passed props in Home to show this modal
 import ProgressListPicker from '@/components/ProgressListPicker'
 import ProgressIndicator from '@/components/ProgressIndicator'
 import ButtonWrapper from '@/components/ButtonWrapper'
+import MiscData from '@/components/ShowMiscData'
 
 export default {
 	components: {
 		ProgressIndicator,
 		ButtonWrapper,
+		MiscData,
 	},
 
 	props: {
@@ -42,6 +36,19 @@ export default {
 	},
 
 	methods: {
+		async removeShow() {
+			const res = await confirm({
+				title: 'Remove show',
+				message: 'Are you sure you want to remove this show?',
+				okButtonText: 'Yes',
+				cancelButtonText: 'No',
+			})
+
+			if (res) {
+				// True tells parent to emit a removeShow event
+				this.$modal.close(true)
+			}
+		},
 		async setProgress() {
 			const progress = await this.$showModal(ProgressListPicker, {
 				props: {
@@ -63,6 +70,7 @@ export default {
 .data-section {
 	// Taken from button styling
 	padding: 16 16 0;
+
 	.container + .container {
 		margin-left: 10;
 	}
@@ -73,10 +81,10 @@ export default {
 	width: 50%;
 }
 
-.data-container {
-	flex-direction: column;
-	width: 50%;
-}
+// .data-container {
+// 	flex-direction: column;
+// 	width: 50%;
+// }
 
 .button {
 	width: 100%;
