@@ -1,11 +1,23 @@
 <template>
-	<StackLayout> </StackLayout>
+	<ScrollView>
+		<StackLayout>
+			<Button @tap="importShows" class="-outline">Import shows</Button>
+			<Button @tap="exportShows" class="-outline">Export shows</Button>
+		</StackLayout>
+	</ScrollView>
 </template>
 
 <script>
-// TODO: import / export
+import { mapActions } from 'vuex'
 
-export default {}
+export default {
+	methods: {
+		...mapActions(['importShows', 'exportShows']),
+		// exportShows() {
+		// 	this.$store.dispatch('exportShows')
+		// },
+	},
+}
 </script>
 
 <style lang="scss" scoped></style>

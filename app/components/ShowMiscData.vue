@@ -6,8 +6,6 @@
 		<Label class="text-center h3" :text="show.nextRuntime" />
 		<Label class="text-center h6 label text-uppercase" text="Episodes left" />
 		<Label class="text-center h3" :text="show.episodesLeft" />
-
-		<!-- number spinner til sæs og ep, + og - til episoder (lav knap der åbner modal), favorite i hjørnet af billede, slet show-knap  -->
 	</FlexboxLayout>
 </template>
 

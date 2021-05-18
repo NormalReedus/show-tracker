@@ -40,8 +40,8 @@ class Group {
 		// Shows are sync, but initializes async
 		if (this._showExists(title)) {
 			//! Display in frontend
-			console.log('This show already exists in this group')
-			return
+			console.log(`The show: ${title} already exists in this group`)
+			return `The show: ${title} already exists in this group`
 		}
 
 		const show = new Show()
@@ -51,10 +51,9 @@ class Group {
 		try {
 			await show.init(title)
 		} catch (err) {
-			//! Message to frontend
-			console.error('\x1b[31m', 'Could not create show with title: ' + title, '\x1b[0m')
 			console.error(err)
-			return
+			console.log('Could not create show with title: ' + title)
+			return 'Could not create show with title: ' + title
 		}
 
 		this.shows.push(show)

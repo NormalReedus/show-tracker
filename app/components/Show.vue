@@ -1,6 +1,18 @@
 <template>
 	<FlexboxLayout class="show-card" @tap="showModal" @doubleTap="incrementEpisode" @longPress="decrementEpisode">
-		<Image :src="show.poster" loadMode="async" stretch="aspectFit" class="poster" />
+		<GridLayout columns="auto, auto, 30" rows="10, auto, auto">
+			<Image
+				row="0"
+				rowSpan="3"
+				col="0"
+				colSpan="3"
+				:src="show.poster"
+				loadMode="async"
+				stretch="aspectFit"
+				class="poster"
+			/>
+			<Label v-if="show.favorite" row="1" col="2" text="" class="favorite-card fas" />
+		</GridLayout>
 		<ProgressIndicator :lastWatched="show.lastWatched" marginTop="5" width="60%" justifyContent="space-around" />
 	</FlexboxLayout>
 </template>
@@ -53,5 +65,14 @@ export default {
 }
 .poster {
 	height: 70%;
+}
+.favorite-card {
+	top: 10%;
+	left: 90%;
+
+	font-size: 18;
+	color: yellowgreen;
+
+	text-shadow: 1 1 4 black;
 }
 </style>

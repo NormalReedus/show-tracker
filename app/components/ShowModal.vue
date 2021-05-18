@@ -1,6 +1,25 @@
 <template>
 	<StackLayout>
-		<Image :src="show.poster" loadMode="async" stretch="aspectFit" />
+		<GridLayout columns="auto, auto, 60" rows="30, auto, auto">
+			<Image
+				row="0"
+				rowSpan="3"
+				col="0"
+				colSpan="3"
+				:src="show.poster"
+				loadMode="async"
+				stretch="aspectFit"
+				width="100%"
+			/>
+			<Label
+				text=""
+				class="favorite-modal"
+				:class="show.favorite ? 'fas' : 'far'"
+				row="1"
+				col="2"
+				@tap="toggleFavorite"
+			/>
+		</GridLayout>
 
 		<FlexboxLayout class="data-section" width="100%">
 			<FlexboxLayout class="progress-container container">
@@ -36,12 +55,15 @@ export default {
 	},
 
 	methods: {
+		toggleFavorite() {
+			this.show.toggleFavorite()
+		},
 		async removeShow() {
 			const res = await confirm({
-				title: 'Remove show',
+				title: 'Remove show?',
 				message: 'Are you sure you want to remove this show?',
-				okButtonText: 'Yes',
-				cancelButtonText: 'No',
+				okButtonText: 'Yup',
+				cancelButtonText: 'Nah',
 			})
 
 			if (res) {
@@ -81,12 +103,17 @@ export default {
 	width: 50%;
 }
 
-// .data-container {
-// 	flex-direction: column;
-// 	width: 50%;
-// }
-
 .button {
 	width: 100%;
+}
+
+.favorite-modal {
+	top: 10%;
+	left: 90%;
+
+	font-size: 30;
+	color: yellowgreen;
+
+	text-shadow: 1 1 4 black;
 }
 </style>
