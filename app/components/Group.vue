@@ -54,10 +54,6 @@ export default {
 	},
 }
 
-function showFilter(show) {
-	return show
-}
-
 function favoriteSort(a, b) {
 	return b.favorite - a.favorite
 }
