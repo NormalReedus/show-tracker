@@ -1,7 +1,7 @@
 <template>
 	<ScrollView>
 		<StackLayout>
-			<SearchBar v-model="filterQuery" @loaded="clearFocus" />
+			<SearchBar v-model="filterQuery" @loaded="clearFocus" hint="Filter" />
 			<FlexboxLayout v-if="displayShows.length > 0" flexWrap="wrap">
 				<Show v-for="show of displayShows" :key="show.imdbId" :show="show" @removeShow="group.removeShow($event)" />
 			</FlexboxLayout>

@@ -14,12 +14,10 @@
 
 <script>
 // TODO: Add show - FAB or placeholder show with big + icon?
-// TODO: Add favorite indicator to shows
-// TODO: Add favorite indicator to show modals that can toggle
-// TODO: Add search bar / sorting (with favorites)
 // TODO: Test without internet (after loading shows from storage, not newly created) (will displaying posters work?)
 // TODO: Show errors when trying to use API but there's no internet (unless they fail silently which might be okay sometimes)
 // TODO: Add saving to storage - should everything be saved every time or just what is edited? Finding the edited content might be a bigger overhead
+// TODO: Rearrange groups + add remove groups in settings
 
 import Groups from '@/components/Groups'
 import Settings from '@/components/Settings'
@@ -64,10 +62,5 @@ export default {
 
 .tab-icon {
 	font-size: 18;
-}
-
-.tab-text {
-	// Have to reset the font-size from tab-icon for some reason
-	font-size: 12;
 }
 </style>
