@@ -1,13 +1,14 @@
 <template>
-	<RadListView for="group in groups" itemReorder="true" class="group-list">
+	<RadListView for="group in groups" itemReorder="true">
 		<v-template>
-			<FlexboxLayout class="pad-md" alignItems="center" justifyContent="space-between">
+			<FlexboxLayout class="pad-md group-item" alignItems="center" justifyContent="space-between">
 				<StackLayout orientation="horizontal" class="item-section">
 					<Label class="fas grayed"></Label>
 					<Label class="group-title">{{ group.title }}</Label>
 				</StackLayout>
 				<StackLayout orientation="horizontal" class="item-section">
-					<Label>Btns</Label>
+					<Label class="fas icon icon-left" @tap="renameGroup(group)"></Label>
+					<Label class="fas icon icon-right" @tap="removeGroup({ group, i: $index })"></Label>
 				</StackLayout>
 			</FlexboxLayout>
 		</v-template>
@@ -15,9 +16,6 @@
 </template>
 
 <script>
-// TODO: Swipe to delete group-item
-// Example here https://github.com/ProgressNS/nativescript-ui-samples-vue/blob/master/listview/app/examples/SwipeActions.ts
-
 export default {
 	computed: {
 		groups() {
@@ -26,8 +24,12 @@ export default {
 	},
 
 	methods: {
-		onItemSwipe(e) {
-			console.log('pressing')
+		renameGroup(group) {
+			console.log('edit')
+		},
+
+		removeGroup(event) {
+			this.$store.dispatch('removeGroup', event)
 		},
 	},
 }
@@ -35,13 +37,13 @@ export default {
 
 <style lang="scss" scoped>
 .grayed {
-	opacity: 0.3;
+	opacity: 0.2;
 	font-weight: 400;
 }
 
-.group-list {
-	//! No transparency
-	background: #0000001a;
+.group-item {
+	// set a bg-color that is not transparent
+	background: rgba(0, 0, 0, 0.1);
 }
 
 .item-section {
@@ -51,5 +53,16 @@ export default {
 
 .group-title {
 	font-size: 16;
+}
+
+.icon {
+	&-left {
+	}
+
+	&-right {
+		color: hsl(0, 100%, 35%);
+		// border-radius: 0 4 4 0; // if setting a bg
+		margin-left: 10;
+	}
 }
 </style>

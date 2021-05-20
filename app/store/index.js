@@ -15,10 +15,19 @@ const store = new Vuex.Store({
 
 			//! Save state in storage?
 		},
+
 		overwriteGroups(state, groups) {
 			state.groups = groups
 
 			//! Save state in storage?
+		},
+
+		removeGroup(state, index) {
+			state.groups.splice(index, 1)
+		},
+
+		renameGroup(_, { group, title }) {
+			group.title = title
 		},
 
 		// addShow(state) {
@@ -35,6 +44,19 @@ const store = new Vuex.Store({
 			commit('addGroup', group)
 
 			return group
+		},
+
+		async removeGroup({ commit }, { group, i }) {
+			const res = await confirm({
+				title: 'Remove group?',
+				message: `Are you sure you want to remove the group '${group.title}'?`,
+				okButtonText: 'Yup',
+				cancelButtonText: 'Nah',
+			})
+
+			if (res) {
+				commit('removeGroup', i)
+			}
 		},
 
 		async newShow(_, { group, title }) {
@@ -92,7 +114,7 @@ const store = new Vuex.Store({
 			const groups = Group.importGroups(clipboardContent)
 
 			const res = await confirm({
-				title: 'Overwrite?',
+				title: 'Overwrite groups?',
 				message:
 					"Do you want to overwrite all existing groups & shows? Select 'nah' to instead add groups & shows to the existing groups & shows.",
 				okButtonText: 'Yup',
