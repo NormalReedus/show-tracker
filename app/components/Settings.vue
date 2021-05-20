@@ -4,7 +4,7 @@
 			<Button @tap="importShows" class="-outline">Import shows</Button>
 			<Button @tap="exportShows" class="-outline">Export shows</Button>
 
-			<Label class="h2">Groups</Label>
+			<Label class="h2 pad-md">Groups</Label>
 			<GroupList />
 		</StackLayout>
 	</ScrollView>

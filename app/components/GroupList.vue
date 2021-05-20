@@ -1,9 +1,14 @@
 <template>
-	<RadListView for="group in groups" itemReorder="true">
+	<RadListView for="group in groups" itemReorder="true" class="group-list">
 		<v-template>
-			<FlexboxLayout class="group-item" justifyContent="space-between">
-				<Label>{{ group.title }}</Label>
-				<Label class="fas grayed"></Label>
+			<FlexboxLayout class="pad-md" alignItems="center" justifyContent="space-between">
+				<StackLayout orientation="horizontal" class="item-section">
+					<Label class="fas grayed"></Label>
+					<Label class="group-title">{{ group.title }}</Label>
+				</StackLayout>
+				<StackLayout orientation="horizontal" class="item-section">
+					<Label>Btns</Label>
+				</StackLayout>
 			</FlexboxLayout>
 		</v-template>
 	</RadListView>
@@ -19,6 +24,12 @@ export default {
 			return this.$store.state.groups
 		},
 	},
+
+	methods: {
+		onItemSwipe(e) {
+			console.log('pressing')
+		},
+	},
 }
 </script>
 
@@ -28,8 +39,17 @@ export default {
 	font-weight: 400;
 }
 
-.group-item {
-	padding: 8 16;
-	// use background color
+.group-list {
+	//! No transparency
+	background: #0000001a;
+}
+
+.item-section {
+	margin: 0;
+	padding: 0;
+}
+
+.group-title {
+	font-size: 16;
 }
 </style>
