@@ -1,10 +1,11 @@
 <template>
 	<Page class="ns-dark" actionBarHidden="true">
 		<TabView androidTabsPosition="bottom">
+			<!-- film icon -->
 			<TabViewItem title="" class="fas tab-icon">
 				<Groups />
 			</TabViewItem>
-			<!-- gear -->
+			<!-- gear icon -->
 			<TabViewItem title="" class="fas tab-icon">
 				<Settings />
 			</TabViewItem>
@@ -16,8 +17,9 @@
 // TODO: Add show - FAB or placeholder show with big + icon?
 // TODO: Test without internet (after loading shows from storage, not newly created) (will displaying posters work?)
 // TODO: Show errors when trying to use API but there's no internet (unless they fail silently which might be okay sometimes)
-// TODO: Add saving to storage - should everything be saved every time or just what is edited? Finding the edited content might be a bigger overhead
-// TODO: Rearrange groups + add remove groups in settings
+// TODO: Add saving to storage in store (observable?) - should everything be saved every time or just what is edited? Finding the edited content might be a bigger overhead
+// TODO: Add groups in settings (button under GroupList)
+// TODO: Check if home should use bottom nav instead of TabView
 
 import Groups from '@/components/Groups'
 import Settings from '@/components/Settings'
@@ -32,28 +34,25 @@ export default {
 		message: 'Show Tracker',
 	}),
 
-	async beforeCreate() {
-		const group1 = await this.$store.dispatch('newGroup', 'Magnus & Helena')
-		const group2 = await this.$store.dispatch('newGroup', 'Magnus')
-
-		const shows1 = [
-			'game of thrones',
-			'the walking dead',
-			'the flash',
-			'better call saul',
-			'rick and morty',
-			'lovecraft country',
-		]
-
-		const shows2 = ['band of brothers', 'the pacific']
-
-		for (const show of shows1) {
-			this.$store.dispatch('newShow', { group: group1, title: show })
-		}
-		for (const show of shows2) {
-			this.$store.dispatch('newShow', { group: group2, title: show })
-		}
-	},
+	// async beforeCreate() {
+	// const group1 = await this.$store.dispatch('newGroup', 'Magnus & Helena')
+	// const group2 = await this.$store.dispatch('newGroup', 'Magnus')
+	// const shows1 = [
+	// 	'game of thrones',
+	// 	'the walking dead',
+	// 	'the flash',
+	// 	'better call saul',
+	// 	'rick and morty',
+	// 	'lovecraft country',
+	// ]
+	// const shows2 = ['band of brothers', 'the pacific']
+	// for (const show of shows1) {
+	// 	this.$store.dispatch('newShow', { group: group1, title: show })
+	// }
+	// for (const show of shows2) {
+	// 	this.$store.dispatch('newShow', { group: group2, title: show })
+	// }
+	// },
 }
 </script>
 

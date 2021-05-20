@@ -51,14 +51,6 @@ export default {
 	},
 
 	methods: {
-		seasonChange(e) {
-			console.log(e)
-		},
-
-		episodeChange(e) {
-			console.log(e)
-		},
-
 		closeModal(success) {
 			if (!success) {
 				this.$modal.close(null)

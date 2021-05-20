@@ -2,6 +2,7 @@ import Vue from 'nativescript-vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 const clipboard = require('nativescript-clipboard')
+import { android } from '@nativescript/core/application'
 
 import Group from '~/backend/Group'
 
@@ -22,23 +23,36 @@ const store = new Vuex.Store({
 			//! Save state in storage?
 		},
 
-		removeGroup(state, index) {
+		removeGroup(state, title) {
+			const index = state.groups.findIndex(group => group.title === title)
+
+			if (index === -1) return
+
 			state.groups.splice(index, 1)
 		},
 
 		renameGroup(_, { group, title }) {
 			group.title = title
 		},
-
-		// addShow(state) {
-		// 	console.log('Added the show, mate')
-		// },
 	},
 
 	actions: {
 		// Only an action because it can return the group
 		//! Return if the return value is not needed out of testing, and use mutation directly
-		newGroup({ commit }, title) {
+		newGroup({ commit, state }, title) {
+			// No duplicates - title is like an ID for deletion
+			const titleExists = state.groups.findIndex(group => group.title === title)
+
+			if (titleExists !== -1) {
+				alert({
+					title: 'Could not create group',
+					message: `There is already a group with the title '${title}'.`,
+					okButtonText: 'Alright',
+				})
+
+				return
+			}
+
 			const group = new Group(title)
 
 			commit('addGroup', group)
@@ -46,16 +60,34 @@ const store = new Vuex.Store({
 			return group
 		},
 
-		async removeGroup({ commit }, { group, i }) {
+		async removeGroup({ commit }, title) {
 			const res = await confirm({
 				title: 'Remove group?',
-				message: `Are you sure you want to remove the group '${group.title}'?`,
+				message: `Are you sure you want to remove the group '${title}'? This will restart the application.`,
 				okButtonText: 'Yup',
 				cancelButtonText: 'Nah',
 			})
 
 			if (res) {
-				commit('removeGroup', i)
+				commit('removeGroup', title)
+				// Save shit
+
+				restart()
+			}
+		},
+
+		async renameGroup({ commit }, group) {
+			const res = await prompt({
+				title: 'Rename group',
+				message: `Choose a new title for the group '${group.title}'.`,
+				defaultText: group.title,
+				okButtonText: 'Done',
+				cancelButtonText: 'Take me back',
+			})
+
+			if (res.result) {
+				commit('renameGroup', { group, title: res.text })
+				// Save shit
 			}
 		},
 
@@ -65,7 +97,7 @@ const store = new Vuex.Store({
 			if (err) {
 				alert({
 					title: 'Error',
-					message: 'There was an error when adding the show: ' + title,
+					message: `There was an error when adding the show '${title}'.`,
 					okButtonText: 'Alright',
 				})
 				return
@@ -88,7 +120,7 @@ const store = new Vuex.Store({
 			}
 
 			alert({
-				title: 'Export',
+				title: 'Export shows',
 				message: 'Your data has been copied to the clipboard.',
 				okButtonText: 'Yup',
 			})
@@ -131,12 +163,20 @@ const store = new Vuex.Store({
 
 			//! Update all shows
 			alert({
-				title: 'Import',
+				title: 'Import shows',
 				message: 'Your shows have been imported.',
 				okButtonText: 'Awesome',
 			})
 		},
 	},
 })
+
+function restart() {
+	const activity = android.foregroundActivity
+	const intent = activity.getIntent()
+
+	activity.finish()
+	android.context.startActivity(intent)
+}
 
 export default store

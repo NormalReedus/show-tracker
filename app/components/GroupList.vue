@@ -3,12 +3,15 @@
 		<v-template>
 			<FlexboxLayout class="pad-md group-item" alignItems="center" justifyContent="space-between">
 				<StackLayout orientation="horizontal" class="item-section">
+					<!-- grip icon -->
 					<Label class="fas grayed"></Label>
 					<Label class="group-title">{{ group.title }}</Label>
 				</StackLayout>
 				<StackLayout orientation="horizontal" class="item-section">
+					<!-- pen icon -->
 					<Label class="fas icon icon-left" @tap="renameGroup(group)"></Label>
-					<Label class="fas icon icon-right" @tap="removeGroup({ group, i: $index })"></Label>
+					<!-- skull icon -->
+					<Label class="fas icon icon-right" @tap="removeGroup(group.title)"></Label>
 				</StackLayout>
 			</FlexboxLayout>
 		</v-template>
@@ -25,11 +28,11 @@ export default {
 
 	methods: {
 		renameGroup(group) {
-			console.log('edit')
+			this.$store.dispatch('renameGroup', group)
 		},
 
-		removeGroup(event) {
-			this.$store.dispatch('removeGroup', event)
+		removeGroup(title) {
+			this.$store.dispatch('removeGroup', title)
 		},
 	},
 }
@@ -56,8 +59,8 @@ export default {
 }
 
 .icon {
-	&-left {
-	}
+	// &-left {
+	// }
 
 	&-right {
 		color: hsl(0, 100%, 35%);
