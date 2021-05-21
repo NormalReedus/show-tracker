@@ -3,7 +3,8 @@
 		<FlexboxLayout justifyContent="space-around" class="listpicker-container">
 			<FlexboxLayout flexDirection="column" alignItems="center">
 				<Label class="text-uppercase h3">Season</Label>
-				<ListPicker :items="show.seasonNums" v-model="seas" />
+				<!-- v-model uses index, not the items from show.seasonNums -->
+				<ListPicker :items="show.seasonNums" :selectedIndex="seas - 1" @selectedIndexChange="seas = $event.value + 1" />
 			</FlexboxLayout>
 			<FlexboxLayout flexDirection="column" alignItems="center">
 				<Label class="text-uppercase h3">Episode</Label>
@@ -34,7 +35,7 @@ export default {
 	},
 
 	data: () => ({
-		seas: 0, //! init as 1
+		seas: 1, //! init as 1
 		ep: 0,
 	}),
 

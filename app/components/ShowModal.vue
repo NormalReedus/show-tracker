@@ -67,7 +67,7 @@ export default {
 			})
 
 			if (res) {
-				// True tells parent to emit a removeShow event
+				// true tells parent to emit a removeShow event
 				this.$modal.close(true)
 			}
 		},
@@ -78,7 +78,7 @@ export default {
 				},
 			})
 
-			// Set progress was canceled
+			// set progress was canceled
 			if (!progress) return
 
 			// seas, ep

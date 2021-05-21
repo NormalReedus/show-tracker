@@ -1,7 +1,7 @@
 <template>
 	<ScrollView>
 		<StackLayout>
-			<SearchBar v-model="filterQuery" @loaded="clearFocus" hint="Filter" />
+			<SearchBar v-model="filterQuery" @loaded="clearFocus" hint="Filter" class="search-bar" />
 			<FlexboxLayout v-if="displayShows.length > 0" flexWrap="wrap">
 				<Show v-for="show of displayShows" :key="show.imdbId" :show="show" @removeShow="group.removeShow($event)" />
 				<AddShow @addShow="addShow" />
@@ -66,4 +66,8 @@ function favoriteSort(a, b) {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.search-bar {
+	margin-bottom: 10;
+}
+</style>

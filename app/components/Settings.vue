@@ -1,8 +1,8 @@
 <template>
 	<ScrollView>
 		<StackLayout>
-			<Button @tap="importShows" class="-outline">Import shows</Button>
-			<Button @tap="exportShows" class="-outline">Export shows</Button>
+			<Button @tap="importShows" class="-outline">Import</Button>
+			<Button @tap="exportShows" class="-outline">Export</Button>
 
 			<Label class="h2 pad-md">Groups</Label>
 			<GroupList />

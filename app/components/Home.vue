@@ -14,13 +14,13 @@
 </template>
 
 <script>
-// TODO: Add show - FAB or placeholder show with big + icon?
 // TODO: Test without internet (after loading shows from storage, not newly created) (will displaying posters work?)
 // TODO: Show errors when trying to use API but there's no internet (unless they fail silently which might be okay sometimes)
 // TODO: Add saving to storage in store (observable?) - should everything be saved every time or just what is edited? Finding the edited content might be a bigger overhead
 // TODO: Add groups in settings (button under GroupList)
 // TODO: Check if home should use bottom nav instead of TabView
 // TODO: Go through comments & create alerts on errors
+// TODO: Find out when to call update on all shows (like when importing)
 
 import Groups from '@/components/Groups'
 import Settings from '@/components/Settings'

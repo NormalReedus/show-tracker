@@ -37,8 +37,8 @@ const store = new Vuex.Store({
 	},
 
 	actions: {
-		// Only an action because it can return the group
-		//! Return if the return value is not needed out of testing, and use mutation directly
+		// only an action because it can return the group
+		//! remove if the return value is not needed out of testing, and use mutation directly
 		newGroup({ commit, state }, title) {
 			// No duplicates - title is like an ID for deletion
 			const titleExists = state.groups.findIndex(group => group.title === title)
@@ -145,12 +145,15 @@ const store = new Vuex.Store({
 			})
 		},
 
-		//! Buggy until going through all tabs
-		async importShows({ commit }) {
+		async importShows({ commit, dispatch }) {
 			let clipboardContent
+			let groups
 
 			try {
 				clipboardContent = await clipboard.getText()
+
+				// generate groups and shows (with methods etc) from static json
+				groups = Group.importGroups(clipboardContent)
 			} catch (err) {
 				alert({
 					title: 'Error',
@@ -161,31 +164,41 @@ const store = new Vuex.Store({
 				return
 			}
 
-			// Generate groups and shows (with methods etc) from static json
-			const groups = Group.importGroups(clipboardContent)
-
 			const res = await confirm({
 				title: 'Overwrite groups?',
-				message:
-					"Do you want to overwrite all existing groups & shows? Select 'nah' to instead add groups & shows to the existing groups & shows.",
-				okButtonText: 'Yup',
-				cancelButtonText: 'Nah',
+				message: 'Would you like to overwrite existing groups or append groups to the already existing groups?',
+				okButtonText: 'Overwrite',
+				cancelButtonText: 'Append',
 			})
 
 			if (res) {
+				// overwrite
 				commit('overwriteGroups', groups)
 			} else {
+				// append
 				for (const group of groups) {
 					commit('addGroup', group)
 				}
 			}
 
-			//! Update all shows
-			alert({
+			await alert({
 				title: 'Import shows',
-				message: 'Your shows have been imported.',
+				message: 'Your shows have been imported. The app will now restart.',
 				okButtonText: 'Awesome',
 			})
+
+			restart()
+
+			dispatch('updateShows')
+		},
+
+		// fetch new seasons, data about next episode airdate etc
+		updateShows({ state }) {
+			for (const group of state.groups) {
+				for (const show of group.shows) {
+					show.update()
+				}
+			}
 		},
 	},
 })

@@ -36,11 +36,7 @@ async function omdbGet({ imdbId, seasonNum, title }) {
 	}
 
 	if (res.Response === 'False') {
-		throw new Error(
-			'Cannot find resource on OMDB: ' + imdbId + ' - ' + seasonNum
-				? 'Season: ' + seasonNum
-				: ''
-		)
+		throw new Error('Cannot find resource on OMDB: ' + imdbId + ' - ' + seasonNum ? 'Season: ' + seasonNum : '')
 	}
 
 	return res
@@ -61,9 +57,7 @@ async function tvmGetNextEpHref(imdbId) {
 	const res = await getJson(reqUrl)
 
 	if (!res) {
-		throw new Error(
-			'There was an error finding the next air date for: ' + imdbId
-		)
+		throw new Error('There was an error finding the next air date for: ' + imdbId)
 		return
 	}
 
@@ -86,13 +80,3 @@ module.exports = {
 	omdbGet,
 	tvmGetNextEpHref,
 }
-
-// const testUrl = process.env.TVMAZE_API_URL + '/lookup/shows?imdb=tt8712204'
-// console.log(await getJson(testUrl))
-
-// console.log(omdbGetSeason('123&this'))
-// console.log(urlSerializer('http://google.com', { hello: 'alright', this: 1337 }))
-// console.log(await omdbGet({ imdbId: 'tt8712204' }))
-// console.log(await tvmGetEpisode(await tvmGetNextEpHref('tt8712204')))
-
-// console.log(await tvmGetShow("batwoman"))
