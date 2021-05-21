@@ -91,19 +91,38 @@ const store = new Vuex.Store({
 			}
 		},
 
-		async newShow(_, { group, title }) {
-			const err = await group.addShow(title)
+		// does not commit since adding groups is async...
+		async newShow(_, group) {
+			const res = await prompt({
+				title: 'New show',
+				message: `Add a show to the group '${group.title}'.`,
+				okButtonText: 'Done',
+				cancelButtonText: 'Take me back',
+			})
 
-			if (err) {
-				alert({
-					title: 'Error',
-					message: `There was an error when adding the show '${title}'.`,
-					okButtonText: 'Alright',
-				})
-				return
+			if (res.result) {
+				if (group.showExists(res.text)) {
+					alert({
+						title: 'Error',
+						message: `The show: ${res.text} already exists in this group.`,
+						okButtonText: 'Alright',
+					})
+					return
+				}
+
+				const err = await group.addShow(res.text)
+
+				if (err) {
+					alert({
+						title: 'Error',
+						message: err,
+						okButtonText: 'Alright',
+					})
+					return
+				}
+
+				return group
 			}
-
-			return group
 		},
 
 		async exportShows({ state }) {

@@ -34,7 +34,7 @@ export default {
 	},
 
 	data: () => ({
-		seas: 0,
+		seas: 0, //! init as 1
 		ep: 0,
 	}),
 

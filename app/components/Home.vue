@@ -20,6 +20,7 @@
 // TODO: Add saving to storage in store (observable?) - should everything be saved every time or just what is edited? Finding the edited content might be a bigger overhead
 // TODO: Add groups in settings (button under GroupList)
 // TODO: Check if home should use bottom nav instead of TabView
+// TODO: Go through comments & create alerts on errors
 
 import Groups from '@/components/Groups'
 import Settings from '@/components/Settings'

@@ -38,12 +38,6 @@ class Group {
 
 	async addShow(title) {
 		// Shows are sync, but initializes async
-		if (this._showExists(title)) {
-			//! Display in frontend
-			console.log(`The show: ${title} already exists in this group`)
-			return `The show: ${title} already exists in this group`
-		}
-
 		const show = new Show()
 
 		// All processes in init will throw error if something goes fatally wrong
@@ -52,8 +46,7 @@ class Group {
 			await show.init(title)
 		} catch (err) {
 			console.error(err)
-			console.log('Could not create show with title: ' + title)
-			return 'Could not create show with title: ' + title
+			return `There was an error creating the show '${title}'.`
 		}
 
 		this.shows.push(show)
@@ -65,7 +58,7 @@ class Group {
 		this.shows.splice(showIndex, 1)
 	}
 
-	_showExists(title) {
+	showExists(title) {
 		const match = this.shows.find(show => show.title.toLowerCase() === title.toLowerCase())
 
 		return match

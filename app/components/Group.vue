@@ -4,6 +4,7 @@
 			<SearchBar v-model="filterQuery" @loaded="clearFocus" hint="Filter" />
 			<FlexboxLayout v-if="displayShows.length > 0" flexWrap="wrap">
 				<Show v-for="show of displayShows" :key="show.imdbId" :show="show" @removeShow="group.removeShow($event)" />
+				<AddShow @addShow="addShow" />
 			</FlexboxLayout>
 		</StackLayout>
 	</ScrollView>
@@ -12,6 +13,7 @@
 <script>
 import fuzzy from 'fuzzy'
 import Show from '@/components/Show'
+import AddShow from '@/components/AddShow'
 
 const FUZZY_OPTS = {
 	extract(show) {
@@ -22,6 +24,7 @@ const FUZZY_OPTS = {
 export default {
 	components: {
 		Show,
+		AddShow,
 	},
 
 	props: {
@@ -46,6 +49,10 @@ export default {
 	},
 
 	methods: {
+		addShow() {
+			this.$store.dispatch('newShow', this.group)
+		},
+
 		clearFocus(e) {
 			const field = e.object
 

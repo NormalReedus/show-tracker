@@ -1,6 +1,12 @@
 <template>
-	<FlexboxLayout class="show-card" @tap="showModal" @doubleTap="incrementEpisode" @longPress="decrementEpisode">
-		<GridLayout columns="auto, auto, 30" rows="10, auto, auto">
+	<FlexboxLayout class="show-card">
+		<GridLayout
+			columns="auto, auto, 30"
+			rows="10, auto, auto"
+			@tap="showModal"
+			@doubleTap="incrementEpisode"
+			@longPress="decrementEpisode"
+		>
 			<Image
 				row="0"
 				rowSpan="3"
@@ -61,7 +67,7 @@ export default {
 	width: 50%;
 	height: 250;
 	align-items: center;
-	margin-top: 10;
+	// margin-top: 10;
 }
 .poster {
 	height: 70%;

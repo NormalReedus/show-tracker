@@ -1,20 +1,19 @@
 const { getJson, omdbGet, tvmGetNextEpHref } = require('./services')
 
-// How often to check for new data (so we don't make requests on all interactions)
+// how often to check for new data (so we don't make requests on all interactions)
 const UPDATE_INTERVAL_HOURS = 6
 
 // TODO: add something that displays if a show is done
-// Use both the prop from API that shows if the the show is running and whether the client is at the last episode and season with / without a next air date
+// use both the prop from API that shows if the the show is running and whether the client is at the last episode and season with / without a next air date
 
-//! handle if omdb and tvm cannot find the resource on init
 class Show {
-	// Takes parsed shows from json, that do not have methods etc
+	// takes parsed shows from json, that do not have methods etc
 	static importShows(staticShows) {
 		console.log(staticShows)
 
 		const shows = staticShows.map(staticShow => {
-			// Make new show with methods etc and overwrite all the props that also exist on staticShow with those of staticShow
-			// We don't use init since we have all the props
+			// make new show with methods etc and overwrite all the props that also exist on staticShow with those of staticShow
+			// we don't use init since we have all the props
 			const show = Object.assign(new Show(), staticShow)
 
 			return show
@@ -26,26 +25,26 @@ class Show {
 	constructor() {
 		this.lastUpdated = Date.now()
 		this.lastWatched = {
-			seasonNum: 0,
+			seasonNum: 0, //! start at 1
 			episodeNum: 0,
 		}
 		this.favorite = false
-		// Null props are set in init()
+		// null props are set in init()
 		this.title = null
 		this.poster = null
 		this.imdbId = null
 		this.totalSeasons = null
 		this.seasons = null
-		this.nextAirDate = null // Next airing ep (not the next after the one watched)
-		this.nextRuntime = null // Next after the one watched
+		this.nextAirDate = null // next airing ep (not the next after the one watched)
+		this.nextRuntime = null // next after the one watched
 		this.episodesLeft = null
 	}
 
 	//* SETTING / UPDATING PROPS
 
-	// No error handling here, this is done in Group
+	// no error handling here, this is done in Group
 	async init(title) {
-		// Everything depends on this going first
+		// everything depends on this going first
 		const res = await omdbGet({ title })
 
 		this.title = res.Title
@@ -54,7 +53,7 @@ class Show {
 		this.totalSeasons = res.totalSeasons
 
 		this._setNextAirDate()
-		await this._setSeasons() // Last 2 depends on this
+		await this._setSeasons() // last 2 depend on this
 		this._setNextRuntime()
 		this._setEpisodesLeft()
 	}
@@ -73,7 +72,7 @@ class Show {
 
 	async _setSeasons() {
 		const seasonPromises = []
-		// Seasons are 1 indexed on the API
+		// seasons are 1 indexed on the API
 		for (let s = 1; s <= this.totalSeasons; s++) {
 			// omdb is 1 indexed
 			const season = omdbGet({ imdbId: this.imdbId, seasonNum: s })
@@ -90,7 +89,7 @@ class Show {
 		this.seasons = seasons
 	}
 
-	//TODO: Eventuelt skriv denne om til bare at fetche runtime fra nuværende episode / show, da det ikke lader til at være forskelligt fra ep til ep
+	// TODO: eventuelt skriv denne om til bare at fetche runtime fra nuværende episode / show, da det ikke lader til at være forskelligt fra ep til ep
 	async _setNextRuntime() {
 		const nextEp = this._nextEpisode
 		if (!nextEp) {
@@ -110,10 +109,11 @@ class Show {
 		// only loop through seasons we have not fully watched
 		// use seasonNum directly since this.seasons is 0 indexed (in contrast to the API)
 		for (let s = this.lastWatched.seasonNum; s < this.totalSeasons; s++) {
+			//! init s as seasonNum -1
 			epsInSeasons += this.seasons[s].Episodes.length
 		}
 
-		// Subtract the number of eps watched in current season
+		// subtract the number of eps watched in current season
 		this.episodesLeft = epsInSeasons - this.lastWatched.episodeNum
 	}
 
@@ -131,61 +131,64 @@ class Show {
 	//* SHORTCUTS
 
 	get _currentSeason() {
-		// Returns undefined when last season has been watched
-		return this.seasons[this.lastWatched.seasonNum]
+		// returns undefined when last season has been watched //! still true after edit? test
+		return this.seasons[this.lastWatched.seasonNum] //! seasonNum -1
 	}
 
 	get _nextSeason() {
-		// Returns undefined when on last season or having watched last season
+		// returns undefined when on last season or having watched last season //! part about having watched last still true after edit? test
 
 		if (this.lastWatched.episodeNum === 0) {
-			// No eps watched of season means that next season us currently index of lastwatched.seasonNum
-			return this.seasons[this.lastWatched.seasonNum]
+			// no eps watched of season means that next season us currently index of lastwatched.seasonNum
+			return this.seasons[this.lastWatched.seasonNum] //! return this._currentSeason
 		}
 
-		return this.seasons[this.lastWatched.seasonNum + 1]
+		return this.seasons[this.lastWatched.seasonNum + 1] //! not +1
 	}
 
 	get _nextEpisode() {
-		// Returns undefined when there is no next episode
+		// returns undefined when there is no next episode
 		if (!this._currentSeason) {
-			// Last season has been watched
+			//! still necessary after edit?
+			// last season has been watched
 			return
 		}
 
-		// There are more episodes in this season
-		// 'this season' being either the one in progress or the one just started
+		// there are more episodes in this season
+		// 'this season' being either the one in progress or the one just started //! still doing this with just started season?
 		return this._currentSeason.Episodes[this.lastWatched.episodeNum]
 	}
 
-	// Returns a list of season numbers
-	// 0th indexed since it is used by client to pick the lastWatched.seasonNum
+	// returns a list of season numbers
+	// 0th indexed since it is used by client to pick the lastWatched.seasonNum //! nope
 	get seasonNums() {
-		const indices = this.seasons.map((_, index) => index)
-		// We add one seasonNum to the list, since client can have watched the last season
-		// e.g. with 8 seasons indices could be 0, ..., 7, but we want client to be able to say they have watched the whole 8th season as well
-		indices.push(indices.length)
+		const indices = this.seasons.map((_, index) => index) //! return index + 1
+
+		// we add one seasonNum to the list, since client can have watched the last season
+		// e.g. with 8 seasons indices could be 0, ..., 7, but we want client to be able to say they have watched the whole 8th season as well //! +1 for all these, 'we want client to be able to say they have started the 9th season as well' instead
+		indices.push(indices.length) //! +1
 
 		return indices
 	}
 
 	getSeasonEpisodeNums(seasonNum) {
-		// Trying to get eps for season after the last (when all have been watched), you can only set ep to 0
+		// trying to get eps for season after the last (when all have been watched), you can only set ep to 0
 		if (seasonNum === this.seasons.length) {
+			//! +1
 			return [0]
 		}
 
-		return this.seasons[seasonNum].Episodes.map((_, index) => index)
+		return this.seasons[seasonNum].Episodes.map((_, index) => index) //! seasonNum -1
 	}
 
 	//* CONTROLLERS
 
-	// Call this before accessing any props that are fetched from APIS
+	// call this before accessing any props that are fetched from APIS
 	async update() {
 		if (!this._shouldUpdate) return
 
 		const res = await omdbGet({ imdbId: this.imdbId })
-		this.totalSeasons = res.totalSeasons // Needed for the rest
+		this.totalSeasons = res.totalSeasons // needed for the rest
 
 		this._setNextAirDate()
 		await this._setSeasons()
@@ -199,11 +202,9 @@ class Show {
 	async setProgress({ seas, ep }) {
 		await this.update()
 
-		// since you cannot have watched episodes after watching the last season
-		// if (seas === this.seasons.length && ep !== 0) return //TODO: Giv fejl-popup
-
-		// Setting season to last season (everything watched) only allows episode to be 0, so it is set to 0 regardless of ep's value
+		// setting season to last season (everything watched) only allows episode to be 0, so it is set to 0 regardless of ep's value
 		if (seas === this.seasons.length) {
+			//! length + 1
 			this.lastWatched = {
 				seasonNum: seas,
 				episodeNum: 0,
@@ -213,56 +214,45 @@ class Show {
 			return
 		}
 
-		// // Don't do anything if season does not exist
-		// if (!this.seasons[seas]) return //! HVIS SÆSON ER 1 MERE END DE EKSISTERENDE skal man kun kunne sætte ep til 0
-
-		//TODO: sørg for at man enten kan sige at man har set sidste afsnit af en sæson ELLER at man har set en hel sæson
-		// No negative eps or higher than season length
-		if (ep < 0 || ep > this.seasons[seas].Episodes.length - 1) return //TODO: Giv fejl-popup
+		// TODO: sørg for at man enten kan sige at man har set sidste afsnit af en sæson ELLER at man har set en hel sæson
+		// no negative eps or higher than season length
+		//! this.seasons[seas - 1]
+		if (ep < 0 || ep > this.seasons[seas].Episodes.length - 1) return // TODO: giv fejl-popup
 
 		this.lastWatched = {
 			seasonNum: seas,
 			episodeNum: ep,
 		}
 
-		// Always update episodes left (even if update does not run)
+		// always update episodes left (even if update does not run)
 		await this._setEpisodesLeft()
 	}
 
-	// Lige nu sætter den ep til sidste afsnit i sæson men bumper ikke. Og så er der ikke en ep 0 i andre sæsoner end 0
 	async watchEpisode() {
 		await this.update()
 		if (!this._currentSeason) {
-			// All seasons have been watched
+			// all seasons have been watched
 			return
 		}
 
 		const seasonLength = this._currentSeason.Episodes.length
 
 		if (this.lastWatched.seasonNum === this.seasons.length) {
-			// All seasons have been watched, episodeNum can only be 0 here
+			//! length +1
+			// all seasons have been watched, episodeNum can only be 0 here
 			return
 		}
 
 		if (this.lastWatched.episodeNum < seasonLength - 1) {
-			// If next episode is not last episode of season
+			// if next episode is not last episode of season
 			this.lastWatched.episodeNum++
 		} else if (this.lastWatched.seasonNum < this.seasons.length) {
+			//! length +1
 			this.lastWatched.seasonNum++
 			this.lastWatched.episodeNum = 0
 		}
 
-		// } else if (this._nextSeason) {
-		// 	//! MAN MÅ GODT INKREMENTERE seasonNum til at seasons[seasonNum] er 1 mere end dem, der findes (siden man har set hele den sidste sæson)
-		// 	// Last episode of season, but there is another season
-		// 	this.lastWatched.seasonNum++
-		// 	this.lastWatched.episodeNum = 0
-		// }
-
-		// Last ep of last season
-		//? Return a message?
-
-		// Always update episodes left (even if update does not run)
+		// update episodes left when lastWatched changes
 		await this._setEpisodesLeft()
 	}
 
@@ -271,25 +261,27 @@ class Show {
 
 		if (this.lastWatched.episodeNum === 0) {
 			if (this.lastWatched.seasonNum === 0) {
-				// No eps or seasons watched
+				//! === 1
+				// no eps or seasons watched
 				return
 			}
 
 			// season(s) watched, but no eps of the current season
 			this.lastWatched.seasonNum--
 
-			// Selecting season after decrement is important, since we need the length of the currentSeason
-			// _currentSeason is now 'the previous season' from when this func was started
+			// selecting season after decrement is important, since we need the length of the currentSeason
+			// _currentSeason is now 'the previous season' from when this func was called
 			this.lastWatched.episodeNum = this._currentSeason.Episodes.length - 1
-			// Always update episodes left (even if update does not run)
+
+			// update episodes left when lastWatched changes
 			await this._setEpisodesLeft()
 			return
 		}
 
-		// In the middle of season
+		// in the middle of season
 		this.lastWatched.episodeNum--
 
-		// Always update episodes left (even if update does not run)
+		// update episodes left when lastWatched changes
 		await this._setEpisodesLeft()
 	}
 
