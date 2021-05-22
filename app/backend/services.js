@@ -1,6 +1,6 @@
 const querystring = require('querystring')
 
-// Returns the JSON response of a GET request to the given api
+// returns the JSON response of a GET request to the given api
 async function getJson(reqUrl) {
 	let content
 	try {
@@ -13,7 +13,7 @@ async function getJson(reqUrl) {
 	return content
 }
 
-// Use getJson to return a show, season or episode from OMDB by IMDB ID
+// use getJson to return a show, season or episode from OMDB by IMDB ID
 async function omdbGet({ imdbId, seasonNum, title }) {
 	const omdbBaseUrl = process.env.OMDB_API_URL
 	const apiKey = process.env.OMDB_API_KEY
@@ -30,7 +30,7 @@ async function omdbGet({ imdbId, seasonNum, title }) {
 
 	const res = await getJson(reqUrl)
 
-	// Only when creating show object are we using title
+	// only when creating show object are we using title
 	if (title && res.Type !== 'series') {
 		throw new Error('Cannot find show on OMDB: ' + title)
 	}
@@ -42,7 +42,7 @@ async function omdbGet({ imdbId, seasonNum, title }) {
 	return res
 }
 
-// Finds a show on tvm by imdbId and returns the tvm href of next airing episode
+// finds a show on tvm by imdbId and returns the tvm href of next airing episode
 async function tvmGetNextEpHref(imdbId) {
 	const tvmBaseUrl = process.env.TVMAZE_API_URL
 
@@ -58,11 +58,9 @@ async function tvmGetNextEpHref(imdbId) {
 
 	if (!res) {
 		throw new Error('There was an error finding the next air date for: ' + imdbId)
-		return
 	}
 
 	if (!res._links.nextepisode) {
-		console.log('There is no next airing episode for IMDB: ' + imdbId)
 		return
 	}
 

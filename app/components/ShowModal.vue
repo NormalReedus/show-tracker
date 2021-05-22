@@ -90,7 +90,7 @@ export default {
 
 <style lang="scss" scoped>
 .data-section {
-	// Taken from button styling
+	// taken from button styling
 	padding: 16 16 0;
 
 	.container + .container {

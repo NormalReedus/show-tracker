@@ -5,6 +5,7 @@ const clipboard = require('nativescript-clipboard')
 import { android } from '@nativescript/core/application'
 
 import Group from '~/backend/Group'
+import Show from '~/backend/Show'
 
 const store = new Vuex.Store({
 	state: {
@@ -37,43 +38,64 @@ const store = new Vuex.Store({
 	},
 
 	actions: {
-		// only an action because it can return the group
-		//! remove if the return value is not needed out of testing, and use mutation directly
-		newGroup({ commit, state }, title) {
-			// No duplicates - title is like an ID for deletion
-			const titleExists = state.groups.findIndex(group => group.title === title)
+		async newGroup({ commit, state }) {
+			const res = await prompt({
+				title: 'Create group',
+				message: 'Choose a title for the group.',
+				okButtonText: 'Done',
+				cancelButtonText: 'Take me back',
+			})
 
+			// canceled by user
+			if (!res.result) return
+
+			// no duplicates - title is like an ID for deletion
+			const titleExists = state.groups.findIndex(group => group.title.toLowerCase() === res.text.toLowerCase())
+
+			// group name is taken
 			if (titleExists !== -1) {
 				alert({
 					title: 'Could not create group',
-					message: `There is already a group with the title '${title}'.`,
+					message: `There is already a group with the title '${res.text}'.`,
 					okButtonText: 'Alright',
 				})
 
 				return
 			}
 
-			const group = new Group(title)
+			try {
+				const group = new Group(res.text)
+				commit('addGroup', group)
+			} catch (err) {
+				alert({
+					title: 'Could not create group',
+					message: `There was an error creating the group.`,
+					okButtonText: 'Alright',
+				})
 
-			commit('addGroup', group)
+				return
+			}
 
-			return group
+			// Save shit
+
+			restart()
 		},
 
 		async removeGroup({ commit }, title) {
 			const res = await confirm({
 				title: 'Remove group?',
-				message: `Are you sure you want to remove the group '${title}'? This will restart the application.`,
+				message: `Are you sure you want to remove the group '${title}'?`,
 				okButtonText: 'Yup',
 				cancelButtonText: 'Nah',
 			})
 
-			if (res) {
-				commit('removeGroup', title)
-				// Save shit
+			// canceled by user
+			if (!res) return
 
-				restart()
-			}
+			commit('removeGroup', title)
+			// Save shit
+
+			restart()
 		},
 
 		async renameGroup({ commit }, group) {
@@ -85,10 +107,11 @@ const store = new Vuex.Store({
 				cancelButtonText: 'Take me back',
 			})
 
-			if (res.result) {
-				commit('renameGroup', { group, title: res.text })
-				// Save shit
-			}
+			// canceled by user
+			if (!res.result) return
+
+			commit('renameGroup', { group, title: res.text })
+			// Save shit
 		},
 
 		// does not commit since adding groups is async...
@@ -125,13 +148,13 @@ const store = new Vuex.Store({
 			}
 		},
 
-		async exportShows({ state }) {
+		async exportGroups({ state }) {
 			try {
 				await clipboard.setText(JSON.stringify(state.groups))
 			} catch (err) {
 				alert({
 					title: 'Error',
-					message: 'There was an error exporting shows',
+					message: 'There was an error exporting groups',
 					okButtonText: 'Alright',
 				})
 				console.error(err)
@@ -139,13 +162,13 @@ const store = new Vuex.Store({
 			}
 
 			alert({
-				title: 'Export shows',
-				message: 'Your data has been copied to the clipboard.',
+				title: 'Export groups',
+				message: 'Your groups have been copied to the clipboard.',
 				okButtonText: 'Yup',
 			})
 		},
 
-		async importShows({ commit, dispatch }) {
+		async importGroups({ commit, dispatch }) {
 			let clipboardContent
 			let groups
 
@@ -157,7 +180,7 @@ const store = new Vuex.Store({
 			} catch (err) {
 				alert({
 					title: 'Error',
-					message: 'There was an error importing shows. Make sure you have the exported shows in your clipboard.',
+					message: 'There was an error importing groups. Make sure you have the exported groups in your clipboard.',
 					okButtonText: 'Alright',
 				})
 				console.error(err)
@@ -181,12 +204,6 @@ const store = new Vuex.Store({
 				}
 			}
 
-			await alert({
-				title: 'Import shows',
-				message: 'Your shows have been imported. The app will now restart.',
-				okButtonText: 'Awesome',
-			})
-
 			restart()
 
 			dispatch('updateShows')
@@ -196,12 +213,26 @@ const store = new Vuex.Store({
 		updateShows({ state }) {
 			for (const group of state.groups) {
 				for (const show of group.shows) {
-					show.update()
+					try {
+						show.update()
+					} catch (err) {
+						console.log('Cannot update show')
+						console.log(err)
+					}
 				}
 			}
 		},
 	},
 })
+
+// keep show data updated
+setInterval(() => {
+	store.dispatch('updateShows')
+}, hrsToMs(Show.UPDATE_INTERVAL_HOURS))
+
+function hrsToMs(hrs) {
+	return hrs * 60 * 60 * 1000
+}
 
 function restart() {
 	const activity = android.foregroundActivity

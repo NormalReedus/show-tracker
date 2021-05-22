@@ -35,13 +35,13 @@ export default {
 	},
 
 	data: () => ({
-		seas: 1, //! init as 1
+		seas: 1,
 		ep: 0,
 	}),
 
 	computed: {
 		items() {
-			// The getter for is just pluralized from the property
+			// the getter for is just pluralized from the property
 			// this.show.lastWatched.seasonNum => this.show.seasonNums, and the same for episodeNum(s)
 			return this.show[this.property + 's']
 		},

@@ -24,8 +24,6 @@ export default {
 
 <style lang="scss" scoped>
 .progress {
-	// justify-content: space-around;
-
 	&-item {
 		flex-direction: column;
 		align-items: center;

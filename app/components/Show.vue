@@ -67,7 +67,6 @@ export default {
 	width: 50%;
 	height: 250;
 	align-items: center;
-	// margin-top: 10;
 }
 .poster {
 	height: 70%;

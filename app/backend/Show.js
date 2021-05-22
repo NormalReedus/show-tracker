@@ -1,12 +1,12 @@
 const { getJson, omdbGet, tvmGetNextEpHref } = require('./services')
 
-// how often to check for new data (so we don't make requests on all interactions)
-const UPDATE_INTERVAL_HOURS = 6
-
 // TODO: add something that displays if a show is done
 // use both the prop from API that shows if the the show is running and whether the client is at the last episode and season with / without a next air date
 
 class Show {
+	// how often to check for new data (so we don't make requests on all interactions)
+	static UPDATE_INTERVAL_HOURS = 6
+
 	// takes parsed shows from json, that do not have methods etc
 	static importShows(staticShows) {
 		const shows = staticShows.map(staticShow => {
@@ -23,7 +23,7 @@ class Show {
 	constructor() {
 		this.lastUpdated = Date.now()
 		this.lastWatched = {
-			seasonNum: 1, //! start at 1
+			seasonNum: 1,
 			episodeNum: 0,
 		}
 		this.favorite = false
@@ -107,7 +107,6 @@ class Show {
 		// only loop through seasons we have not fully watched
 		// use seasonNum directly since this.seasons is 0 indexed (in contrast to the API)
 		for (let s = this.lastWatched.seasonNum - 1; s < this.totalSeasons; s++) {
-			//! init s as seasonNum -1
 			epsInSeasons += this.seasons[s].Episodes.length
 		}
 
@@ -115,13 +114,13 @@ class Show {
 		this.episodesLeft = epsInSeasons - this.lastWatched.episodeNum
 	}
 
-	// Whether the update time interval has passed or not
+	// whether the update time interval has passed or not
 	get _shouldUpdate() {
 		function hrsToMs(hrs) {
 			return hrs * 60 * 60 * 1000
 		}
 
-		const intervalMs = hrsToMs(UPDATE_INTERVAL_HOURS)
+		const intervalMs = hrsToMs(Show.UPDATE_INTERVAL_HOURS)
 
 		return Date.now() - intervalMs > this.lastUpdated
 	}
@@ -129,42 +128,40 @@ class Show {
 	//* SHORTCUTS
 
 	get _currentSeason() {
-		// returns undefined when last season has been watched //! still true after edit? test
-		return this.seasons[this.lastWatched.seasonNum - 1] //! seasonNum -1
+		// returns undefined when last season has been watched
+		return this.seasons[this.lastWatched.seasonNum - 1]
 	}
 
 	get _nextSeason() {
-		// returns undefined when on last season or having watched last season //! part about having watched last still true after edit? test
+		// returns undefined when on last season or having watched last season
 
 		if (this.lastWatched.episodeNum === 0) {
 			// no eps watched of season means that next season us currently index of lastwatched.seasonNum
-			return this._currentSeason //! return this._currentSeason
+			return this._currentSeason
 		}
 
-		return this.seasons[this.lastWatched.seasonNum] //! not +1
+		return this.seasons[this.lastWatched.seasonNum]
 	}
 
 	get _nextEpisode() {
 		// returns undefined when there is no next episode
 		if (!this._currentSeason) {
-			//! still necessary after edit?
 			// last season has been watched
 			return
 		}
 
 		// there are more episodes in this season
-		// 'this season' being either the one in progress or the one just started //! still doing this with just started season?
+		// 'this season' being either the one in progress or the one just started
 		return this._currentSeason.Episodes[this.lastWatched.episodeNum]
 	}
 
 	// returns a list of season numbers
-	// 0th indexed since it is used by client to pick the lastWatched.seasonNum //! nope
 	get seasonNums() {
-		const indices = this.seasons.map((_, index) => index + 1) //! return index + 1
+		const indices = this.seasons.map((_, index) => index + 1)
 
 		// we add one seasonNum to the list, since client can have watched the last season
-		// e.g. with 8 seasons nums could be 1, ..., 8, we want client to be able to say they have started the 9th season as well //! +1 for all these, 'we want client to be able to say they have started the 9th season as well' instead
-		indices.push(indices.length + 1) //! +1
+		// e.g. with 8 seasons nums could be 1, ..., 8, we want client to be able to say they have started the 9th season as well
+		indices.push(indices.length + 1)
 
 		return indices
 	}
@@ -176,7 +173,7 @@ class Show {
 			return [0]
 		}
 
-		return this.seasons[seasonNum - 1].Episodes.map((_, index) => index) //! seasonNum -1
+		return this.seasons[seasonNum - 1].Episodes.map((_, index) => index)
 	}
 
 	//* CONTROLLERS
@@ -195,14 +192,15 @@ class Show {
 		await Promise.all([this._setNextRuntime(), this._setEpisodesLeft()])
 
 		this.lastUpdated = Date.now()
+		console.log('Updated')
 	}
 
 	async setProgress({ seas, ep }) {
-		await this.update()
+		// await this.update()
+		this.update()
 
 		// setting season to last season (everything watched) only allows episode to be 0, so it is set to 0 regardless of ep's value
 		if (seas === this.seasons.length + 1) {
-			//! length + 1
 			this.lastWatched = {
 				seasonNum: seas,
 				episodeNum: 0,
@@ -214,7 +212,6 @@ class Show {
 
 		// TODO: sørg for at man enten kan sige at man har set sidste afsnit af en sæson ELLER at man har set en hel sæson
 		// no negative eps or higher than season length
-		//! this.seasons[seas - 1]
 		if (ep < 0 || ep > this.seasons[seas - 1].Episodes.length - 1) return // TODO: giv fejl-popup
 
 		this.lastWatched = {
@@ -227,7 +224,9 @@ class Show {
 	}
 
 	async watchEpisode() {
-		await this.update()
+		// await this.update()
+		this.update()
+
 		if (!this._currentSeason) {
 			// all seasons have been watched
 			return
@@ -236,7 +235,6 @@ class Show {
 		const seasonLength = this._currentSeason.Episodes.length
 
 		if (this.lastWatched.seasonNum === this.seasons.length + 1) {
-			//! length +1
 			// all seasons have been watched, episodeNum can only be 0 here
 			return
 		}
@@ -245,7 +243,6 @@ class Show {
 			// if next episode is not last episode of season
 			this.lastWatched.episodeNum++
 		} else if (this.lastWatched.seasonNum < this.seasons.length + 1) {
-			//! length +1
 			this.lastWatched.seasonNum++
 			this.lastWatched.episodeNum = 0
 		}
@@ -255,11 +252,11 @@ class Show {
 	}
 
 	async unwatchEpisode() {
-		await this.update()
+		// await this.update()
+		this.update()
 
 		if (this.lastWatched.episodeNum === 0) {
 			if (this.lastWatched.seasonNum === 1) {
-				//! === 1
 				// no eps or seasons watched
 				return
 			}

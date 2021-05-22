@@ -59,9 +59,6 @@ export default {
 }
 
 .icon {
-	// &-left {
-	// }
-
 	&-right {
 		color: hsl(0, 100%, 35%);
 		// border-radius: 0 4 4 0; // if setting a bg

@@ -1,11 +1,10 @@
 <template>
 	<ScrollView>
 		<StackLayout>
-			<Button @tap="importShows" class="-outline">Import</Button>
-			<Button @tap="exportShows" class="-outline">Export</Button>
-
-			<Label class="h2 pad-md">Groups</Label>
-			<GroupList />
+			<Button @tap="newGroup" class="-outline">New group</Button>
+			<Button @tap="importGroups" class="-outline">Import groups</Button>
+			<Button @tap="exportGroups" class="-outline">Export groups</Button>
+			<GroupList class="group-list" />
 		</StackLayout>
 	</ScrollView>
 </template>
@@ -20,9 +19,13 @@ export default {
 	},
 
 	methods: {
-		...mapActions(['importShows', 'exportShows']),
+		...mapActions(['newGroup', 'importGroups', 'exportGroups']),
 	},
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.group-list {
+	margin-top: 8;
+}
+</style>

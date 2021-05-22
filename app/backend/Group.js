@@ -6,7 +6,7 @@ class Group {
 		const staticData = JSON.parse(jsonData)
 
 		const groups = staticData.map(staticGroup => {
-			// Create actual group object from the static parsed json data
+			// create actual group object from the static parsed json data
 			const group = new Group(staticGroup.title)
 
 			const shows = Show.importShows(staticGroup.shows)
@@ -28,10 +28,10 @@ class Group {
 	}
 
 	async addShow(title) {
-		// Shows are sync, but initializes async
+		// shows are sync, but initializes async
 		const show = new Show()
 
-		// All processes in init will throw error if something goes fatally wrong
+		// all processes in init will throw error if something goes fatally wrong
 		// in which case we just don't save the show in this.shows
 		try {
 			await show.init(title)
