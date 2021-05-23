@@ -3,9 +3,12 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 const clipboard = require('nativescript-clipboard')
 import { android } from '@nativescript/core/application'
+import { setString, getString } from '@nativescript/core/application-settings'
 
 import Group from '~/backend/Group'
 import Show from '~/backend/Show'
+
+const STORAGE_KEY = 'groups'
 
 const store = new Vuex.Store({
 	state: {
@@ -14,14 +17,10 @@ const store = new Vuex.Store({
 	mutations: {
 		addGroup(state, group) {
 			state.groups.push(group)
-
-			//! Save state in storage?
 		},
 
 		overwriteGroups(state, groups) {
 			state.groups = groups
-
-			//! Save state in storage?
 		},
 
 		removeGroup(state, title) {
@@ -38,7 +37,7 @@ const store = new Vuex.Store({
 	},
 
 	actions: {
-		async newGroup({ commit, state }) {
+		async newGroup({ dispatch, commit, state }) {
 			const res = await prompt({
 				title: 'Create group',
 				message: 'Choose a title for the group.',
@@ -76,12 +75,12 @@ const store = new Vuex.Store({
 				return
 			}
 
-			// Save shit
-
 			restart()
+
+			dispatch('saveData')
 		},
 
-		async removeGroup({ commit }, title) {
+		async removeGroup({ dispatch, commit }, title) {
 			const res = await confirm({
 				title: 'Remove group?',
 				message: `Are you sure you want to remove the group '${title}'?`,
@@ -93,12 +92,13 @@ const store = new Vuex.Store({
 			if (!res) return
 
 			commit('removeGroup', title)
-			// Save shit
 
 			restart()
+
+			dispatch('saveData')
 		},
 
-		async renameGroup({ commit }, group) {
+		async renameGroup({ dispatch, commit }, group) {
 			const res = await prompt({
 				title: 'Rename group',
 				message: `Choose a new title for the group '${group.title}'.`,
@@ -111,11 +111,12 @@ const store = new Vuex.Store({
 			if (!res.result) return
 
 			commit('renameGroup', { group, title: res.text })
-			// Save shit
+
+			dispatch('saveData')
 		},
 
 		// does not commit since adding groups is async...
-		async newShow(_, group) {
+		async newShow({ dispatch }, group) {
 			const res = await prompt({
 				title: 'New show',
 				message: `Add a show to the group '${group.title}'.`,
@@ -123,29 +124,36 @@ const store = new Vuex.Store({
 				cancelButtonText: 'Take me back',
 			})
 
-			if (res.result) {
-				if (group.showExists(res.text)) {
-					alert({
-						title: 'Error',
-						message: `The show: ${res.text} already exists in this group.`,
-						okButtonText: 'Alright',
-					})
-					return
-				}
+			// cancelled by user
+			if (!res.result) return
 
-				const err = await group.addShow(res.text)
-
-				if (err) {
-					alert({
-						title: 'Error',
-						message: err,
-						okButtonText: 'Alright',
-					})
-					return
-				}
-
-				return group
+			if (group.showExists(res.text)) {
+				alert({
+					title: 'Error',
+					message: `The show: ${res.text} already exists in this group.`,
+					okButtonText: 'Alright',
+				})
+				return
 			}
+
+			const err = await group.addShow(res.text)
+
+			if (err) {
+				alert({
+					title: 'Error',
+					message: err,
+					okButtonText: 'Alright',
+				})
+				return
+			}
+
+			dispatch('saveData')
+		},
+
+		removeShow({ dispatch }, { group, imdbId }) {
+			group.removeShow(imdbId)
+
+			dispatch('saveData')
 		},
 
 		async exportGroups({ state }) {
@@ -168,7 +176,7 @@ const store = new Vuex.Store({
 			})
 		},
 
-		async importGroups({ commit, dispatch }) {
+		async importGroups({ dispatch, commit }) {
 			let clipboardContent
 			let groups
 
@@ -206,21 +214,50 @@ const store = new Vuex.Store({
 
 			restart()
 
+			dispatch('saveData')
+			// saving is also done when updating completes to make sure we at least have the right shows saved
+			// and hopefully also have them updated
 			dispatch('updateShows')
 		},
 
 		// fetch new seasons, data about next episode airdate etc
-		updateShows({ state }) {
+		async updateShows({ state }) {
+			const promises = []
+
 			for (const group of state.groups) {
 				for (const show of group.shows) {
 					try {
-						show.update()
+						promises.push(show.update())
+						// show.update()
 					} catch (err) {
 						console.log('Cannot update show')
 						console.log(err)
 					}
 				}
 			}
+
+			// waiting for all updates to finish before saving to storage
+			await Promise.all(promises)
+			dispatch('saveData')
+		},
+
+		// take everything in state.groups and save to appplication-settings as json
+		async saveData({ state }) {
+			const data = JSON.stringify(state.groups)
+
+			setString(STORAGE_KEY, data)
+		},
+
+		// take json from application-settings and load like when importing groups (with overwrite)
+		loadData({ commit }) {
+			// return null if there is nothing in application-settings
+			const jsonData = getString(STORAGE_KEY, null)
+			if (!jsonData) return
+
+			// generate groups and shows (with methods etc) from static json
+			const groups = Group.importGroups(jsonData)
+
+			commit('overwriteGroups', groups)
 		},
 	},
 })

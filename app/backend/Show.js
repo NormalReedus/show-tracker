@@ -7,7 +7,7 @@ class Show {
 	// how often to check for new data (so we don't make requests on all interactions)
 	static UPDATE_INTERVAL_HOURS = 6
 
-	// takes parsed shows from json, that do not have methods etc
+	// converts static dicts to Show objects (with methods) without calling any APIs
 	static importShows(staticShows) {
 		const shows = staticShows.map(staticShow => {
 			// make new show with methods etc and overwrite all the props that also exist on staticShow with those of staticShow

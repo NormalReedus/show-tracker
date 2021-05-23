@@ -36,12 +36,6 @@ export default {
 			return this.$store.state.groups
 		},
 	},
-
-	watch: {
-		groups(oldVal, newVal) {
-			console.log('I sense a disturbance')
-		},
-	},
 }
 </script>
 

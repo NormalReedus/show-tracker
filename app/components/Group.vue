@@ -3,7 +3,7 @@
 		<StackLayout>
 			<SearchBar v-model="filterQuery" @loaded="clearFocus" hint="Filter" class="search-bar" />
 			<FlexboxLayout flexWrap="wrap">
-				<Show v-for="show of displayShows" :key="show.imdbId" :show="show" @removeShow="group.removeShow($event)" />
+				<Show v-for="show of displayShows" :key="show.imdbId" :show="show" @removeShow="removeShow" />
 				<AddShow @addShow="addShow" />
 			</FlexboxLayout>
 		</StackLayout>
@@ -12,6 +12,7 @@
 
 <script>
 import fuzzy from 'fuzzy'
+
 import Show from '@/components/Show'
 import AddShow from '@/components/AddShow'
 
@@ -49,8 +50,13 @@ export default {
 	},
 
 	methods: {
+		// can't just map actions since the template wants these function names to exist
 		addShow() {
 			this.$store.dispatch('newShow', this.group)
+		},
+
+		removeShow(imdbId) {
+			this.$store.dispatch('removeShow', { group: this.group, imdbId })
 		},
 
 		clearFocus(e) {
