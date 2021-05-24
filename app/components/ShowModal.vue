@@ -29,7 +29,7 @@
 		</FlexboxLayout>
 		<ButtonWrapper>
 			<Button col="0" row="0" @tap="setProgress" class="button -primary">Set progress</Button>
-			<Button col="2" row="0" class="button" @tap="removeShow">Remove show</Button>
+			<Button col="2" row="0" class="button bg-danger" @tap="removeShow">Remove show</Button>
 		</ButtonWrapper>
 	</StackLayout>
 </template>
@@ -56,7 +56,7 @@ export default {
 
 	methods: {
 		toggleFavorite() {
-			this.show.toggleFavorite()
+			this.$store.dispatch('toggleFavorite', this.show)
 		},
 		async removeShow() {
 			const res = await confirm({
@@ -81,8 +81,8 @@ export default {
 			// set progress was canceled
 			if (!progress) return
 
-			// seas, ep
-			this.show.setProgress(progress)
+			// progress == { seas, ep }
+			this.$store.dispatch('setProgress', { show: this.show, progress })
 		},
 	},
 }
@@ -106,7 +106,6 @@ export default {
 .button {
 	width: 100%;
 }
-
 .favorite-modal {
 	top: 10%;
 	left: 90%;
@@ -114,6 +113,6 @@ export default {
 	font-size: 30;
 	color: yellowgreen;
 
-	text-shadow: 1 1 4 black;
+	text-shadow: 2 2 6 black;
 }
 </style>

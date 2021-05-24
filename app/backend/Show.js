@@ -192,7 +192,6 @@ class Show {
 		await Promise.all([this._setNextRuntime(), this._setEpisodesLeft()])
 
 		this.lastUpdated = Date.now()
-		console.log('Updated')
 	}
 
 	async setProgress({ seas, ep }) {

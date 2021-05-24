@@ -17,6 +17,7 @@
 				stretch="aspectFit"
 				class="poster"
 			/>
+			<!-- star icon -->
 			<Label v-if="show.favorite" row="1" col="2" text="" class="favorite-card fas" />
 		</GridLayout>
 		<ProgressIndicator :lastWatched="show.lastWatched" marginTop="5" width="60%" justifyContent="space-around" />
@@ -40,10 +41,10 @@ export default {
 
 	methods: {
 		incrementEpisode() {
-			this.show.watchEpisode()
+			this.$store.dispatch('incrementEpisode', this.show)
 		},
 		decrementEpisode() {
-			this.show.unwatchEpisode()
+			this.$store.dispatch('decrementEpisode', this.show)
 		},
 		async showModal() {
 			const removeShow = await this.$showModal(ShowModal, {
@@ -78,6 +79,6 @@ export default {
 	font-size: 18;
 	color: yellowgreen;
 
-	text-shadow: 1 1 4 black;
+	text-shadow: 2 2 6 black;
 }
 </style>

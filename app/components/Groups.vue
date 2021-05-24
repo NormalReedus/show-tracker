@@ -1,7 +1,7 @@
 <template>
 	<StackLayout>
 		<MDTabs>
-			<MDTabStrip>
+			<MDTabStrip class="tab-strip">
 				<MDTabStripItem class="tab-text" v-for="(group, i) of groups" :key="i">
 					<Label>{{ group.title }}</Label>
 				</MDTabStripItem>

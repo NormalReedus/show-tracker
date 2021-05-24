@@ -21,7 +21,6 @@
 <script>
 import ButtonWrapper from '@/components/ButtonWrapper'
 
-//! Make changing lastwatched use an action that calls saveData
 // TODO: tilføj mulighed for enten at vælge sidste ep i en sæson eller hele sæson, for at signalere en hel sæson er set
 export default {
 	components: {

@@ -48,6 +48,16 @@ const store = new Vuex.Store({
 			// canceled by user
 			if (!res.result) return
 
+			if (res.text === '') {
+				alert({
+					title: 'Could not create group',
+					message: `A group cannot have an empty name.`,
+					okButtonText: 'Alright',
+				})
+
+				return
+			}
+
 			// no duplicates - title is like an ID for deletion
 			const titleExists = state.groups.findIndex(group => group.title.toLowerCase() === res.text.toLowerCase())
 
@@ -110,6 +120,16 @@ const store = new Vuex.Store({
 			// canceled by user
 			if (!res.result) return
 
+			if (res.text === '') {
+				alert({
+					title: 'Could not rename group',
+					message: `A group cannot have an empty name.`,
+					okButtonText: 'Alright',
+				})
+
+				return
+			}
+
 			commit('renameGroup', { group, title: res.text })
 
 			dispatch('saveData')
@@ -153,6 +173,27 @@ const store = new Vuex.Store({
 		removeShow({ dispatch }, { group, imdbId }) {
 			group.removeShow(imdbId)
 
+			dispatch('saveData')
+		},
+
+		setProgress({ dispatch }, { show, progress }) {
+			show.setProgress(progress)
+
+			dispatch('saveData')
+		},
+
+		incrementEpisode({ dispatch }, show) {
+			show.watchEpisode()
+			dispatch('saveData')
+		},
+
+		decrementEpisode({ dispatch }, show) {
+			show.unwatchEpisode()
+			dispatch('saveData')
+		},
+
+		toggleFavorite({ dispatch }, show) {
+			show.toggleFavorite()
 			dispatch('saveData')
 		},
 
@@ -228,7 +269,6 @@ const store = new Vuex.Store({
 				for (const show of group.shows) {
 					try {
 						promises.push(show.update())
-						// show.update()
 					} catch (err) {
 						console.log('Cannot update show')
 						console.log(err)
@@ -238,6 +278,7 @@ const store = new Vuex.Store({
 
 			// waiting for all updates to finish before saving to storage
 			await Promise.all(promises)
+
 			dispatch('saveData')
 		},
 

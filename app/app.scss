@@ -23,3 +23,30 @@
 .pad-md {
 	padding: 8 16;
 }
+
+//* PUT THESE IN CLASSES SO THEY CAN BE APPLIED WITHOUT USING CSS VARS
+//* use dark versions on classes (e.g. .bg-danger) and overwrite in classes with light version (e.g. .ns-light .bg-danger)
+// delete btns etc
+$danger-clr-dark: #9f3c3c;
+$danger-clr-light: #b14a4a;
+// regular bg
+$bg-dark: #383434;
+$bg-light: #ffffff;
+// regular text
+$text-dark: #ffffff;
+$text-light: #262626;
+// disabled btn / placeholder text
+$text-dark-muted: #b3b3b3;
+// selected tabs / CTA btns
+$accent-dark: #63cdff;
+$accent-light: #30bcff;
+// unselected but selectable tabs etc
+$accent-muted-dark: #b5d4e3;
+$accent-muted-light: #abd5e9;
+
+.bg-danger {
+	background: $danger-clr-dark;
+}
+.text-danger {
+	color: $danger-clr-dark;
+}

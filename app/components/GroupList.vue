@@ -11,7 +11,7 @@
 					<!-- pen icon -->
 					<Label class="fas icon icon-left" @tap="renameGroup(group)"></Label>
 					<!-- skull icon -->
-					<Label class="fas icon icon-right" @tap="removeGroup(group.title)"></Label>
+					<Label class="fas icon icon-right text-danger" @tap="removeGroup(group.title)"></Label>
 				</StackLayout>
 			</FlexboxLayout>
 		</v-template>
@@ -60,8 +60,6 @@ export default {
 
 .icon {
 	&-right {
-		color: hsl(0, 100%, 35%);
-		// border-radius: 0 4 4 0; // if setting a bg
 		margin-left: 10;
 	}
 }
