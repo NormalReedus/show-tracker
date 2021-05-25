@@ -1,5 +1,6 @@
 <template>
-	<Page actionBarHidden="true" class="page">
+	<Page actionBarHidden="true" class="bg-default">
+		<!-- use bottomnavigation to style regularly -->
 		<TabView androidTabsPosition="bottom">
 			<!-- film icon -->
 			<TabViewItem title="" class="fas tab-icon">

@@ -1,9 +1,9 @@
 <template>
 	<FlexboxLayout class="show-card">
-		<FlexboxLayout class="add-show" @tap="$emit('addShow')">
+		<FlexboxLayout class="add-show bg-alt" @tap="$emit('addShow')">
 			<Label class="text-uppercase text-center h3">Add</Label>
 			<!-- plus icon -->
-			<Label class="fas text-center plus-icon"></Label>
+			<Label class="fas text-center plus-icon text-default"></Label>
 			<Label class="text-uppercase text-center h3">Show</Label>
 		</FlexboxLayout>
 	</FlexboxLayout>
@@ -22,7 +22,7 @@ export default {}
 }
 .add-show {
 	height: 70%;
-	background: rgba(0, 0, 0, 0.1);
+	// background: rgba(0, 0, 0, 0.1);
 	width: 65%;
 	flex-direction: column;
 	justify-content: center;

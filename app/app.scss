@@ -24,19 +24,24 @@
 	padding: 8 16;
 }
 
-//* PUT THESE IN CLASSES SO THEY CAN BE APPLIED WITHOUT USING CSS VARS
-//* use dark versions on classes (e.g. .bg-danger) and overwrite in classes with light version (e.g. .ns-light .bg-danger)
-// delete btns etc
-$danger-clr-dark: #9f3c3c;
-$danger-clr-light: #b14a4a;
 // regular bg
-$bg-dark: #383434;
+$bg-dark: #303030;
 $bg-light: #ffffff;
+// tabstrip / add show placeholder / group-list items
+$bg-alt-dark: #2b2b2b;
+$bg-alt-light: #f0f0f0;
 // regular text
 $text-dark: #ffffff;
 $text-light: #262626;
-// disabled btn / placeholder text
-$text-dark-muted: #b3b3b3;
+// delete btns etc
+$danger-clr-dark: #9f3c3c;
+$danger-clr-light: #b14a4a;
+// disabled btns / placeholder text
+$text-muted-dark: #b3b3b3;
+$text-muted-light: #464646;
+// search icon
+$text-muted-deep-dark: #6f6f6f;
+$text-muted-deep-light: #575757;
 // selected tabs / CTA btns
 $accent-dark: #63cdff;
 $accent-light: #30bcff;
@@ -44,9 +49,79 @@ $accent-light: #30bcff;
 $accent-muted-dark: #b5d4e3;
 $accent-muted-light: #abd5e9;
 
+//* DARK MODE
+.bg-default {
+	background: $bg-dark;
+}
+.bg-alt {
+	background: $bg-alt-dark;
+}
+.text-default {
+	color: $text-dark;
+}
 .bg-danger {
 	background: $danger-clr-dark;
 }
 .text-danger {
 	color: $danger-clr-dark;
+}
+.text-disabled {
+	color: $text-muted-dark;
+}
+.text-disabled-deep {
+	color: $text-muted-deep-dark;
+}
+.bg-accent {
+	background: $accent-dark;
+}
+.text-accent {
+	color: $accent-dark;
+}
+.border-accent {
+	border-color: $accent-dark;
+}
+.bg-accent-muted {
+	background: $accent-muted-dark;
+}
+.text-accent-muted {
+	color: $accent-muted-dark;
+}
+//* LIGHT MODE
+.ns-light {
+	.bg-default {
+		background: $bg-light;
+	}
+	.bg-alt {
+		background: $bg-alt-light;
+	}
+	.text-default {
+		color: $text-light;
+	}
+	.bg-danger {
+		background: $danger-clr-light;
+	}
+	.text-danger {
+		color: $danger-clr-light;
+	}
+	.text-disabled {
+		color: $text-muted-light;
+	}
+	.text-disabled-deep {
+		color: $text-muted-deep-light;
+	}
+	.bg-accent {
+		background: $accent-light;
+	}
+	.text-accent {
+		color: $accent-light;
+	}
+	.border-accent {
+		color: $accent-light;
+	}
+	.bg-accent-muted {
+		background: $accent-muted-light;
+	}
+	.text-accent-muted {
+		color: $accent-muted-light;
+	}
 }

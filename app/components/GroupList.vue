@@ -1,17 +1,17 @@
 <template>
 	<RadListView for="group in groups" itemReorder="true">
 		<v-template>
-			<FlexboxLayout class="pad-md group-item" alignItems="center" justifyContent="space-between">
+			<FlexboxLayout class="pad-md bg-alt" alignItems="center" justifyContent="space-between">
 				<StackLayout orientation="horizontal" class="item-section">
 					<!-- grip icon -->
-					<Label class="fas grayed"></Label>
-					<Label class="group-title">{{ group.title }}</Label>
+					<Label class="fas grip text-disabled-deep"></Label>
+					<Label class="group-title text-default">{{ group.title }}</Label>
 				</StackLayout>
 				<StackLayout orientation="horizontal" class="item-section">
 					<!-- pen icon -->
-					<Label class="fas icon icon-left" @tap="renameGroup(group)"></Label>
+					<Label class="fas icon icon-left text-disabled" @tap="renameGroup(group)"></Label>
 					<!-- skull icon -->
-					<Label class="fas icon icon-right text-danger" @tap="removeGroup(group.title)"></Label>
+					<Label class="fas icon icon-right text-danger" @tap="removeGroup(group.title)"></Label>
 				</StackLayout>
 			</FlexboxLayout>
 		</v-template>
@@ -39,15 +39,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.grayed {
-	opacity: 0.2;
+.grip {
+	// opacity: 0.2;
 	font-weight: 400;
 }
 
-.group-item {
-	// set a bg-color that is not transparent
-	background: rgba(0, 0, 0, 0.1);
-}
+// .group-item {
+// 	// set a bg-color that is not transparent
+// 	background: rgba(0, 0, 0, 0.1);
+// }
 
 .item-section {
 	margin: 0;
@@ -61,6 +61,7 @@ export default {
 .icon {
 	&-right {
 		margin-left: 10;
+		font-size: 24;
 	}
 }
 </style>
