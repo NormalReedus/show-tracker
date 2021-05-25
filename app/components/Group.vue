@@ -1,7 +1,7 @@
 <template>
 	<ScrollView>
 		<StackLayout>
-			<SearchBar v-model="filterQuery" @loaded="clearFocus" hint="Filter" class="search-bar" />
+			<SearchBar v-model="filterQuery" @loaded="clearFocus" hint="Filter" class="search-bar bg-default text-default" />
 			<FlexboxLayout flexWrap="wrap">
 				<Show v-for="show of displayShows" :key="show.imdbId" :show="show" @removeShow="removeShow" />
 				<AddShow @addShow="addShow" />

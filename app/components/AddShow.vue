@@ -1,10 +1,10 @@
 <template>
 	<FlexboxLayout class="show-card">
 		<FlexboxLayout class="add-show bg-alt" @tap="$emit('addShow')">
-			<Label class="text-uppercase text-center h3">Add</Label>
+			<Label class="text-uppercase text-center h3 text-default">Add</Label>
 			<!-- plus icon -->
 			<Label class="fas text-center plus-icon text-default"></Label>
-			<Label class="text-uppercase text-center h3">Show</Label>
+			<Label class="text-uppercase text-center h3 text-default">Show</Label>
 		</FlexboxLayout>
 	</FlexboxLayout>
 </template>

@@ -1,12 +1,12 @@
 <template>
 	<FlexboxLayout class="progress">
 		<FlexboxLayout class="progress-item">
-			<Label class="progress-item__label h6 text-uppercase">Season</Label>
-			<Label class="progress-item__number h1">{{ lastWatched.seasonNum }}</Label>
+			<Label class="progress-item__label h6 text-uppercase text-default">Season</Label>
+			<Label class="progress-item__number h1 text-default">{{ lastWatched.seasonNum }}</Label>
 		</FlexboxLayout>
 		<FlexboxLayout class="progress-item">
-			<Label class="progress-item__label h6 text-uppercase">Episode</Label>
-			<Label class="progress-item__number h1">{{ lastWatched.episodeNum }}</Label>
+			<Label class="progress-item__label h6 text-uppercase text-default">Episode</Label>
+			<Label class="progress-item__number h1 text-default">{{ lastWatched.episodeNum }}</Label>
 		</FlexboxLayout>
 	</FlexboxLayout>
 </template>

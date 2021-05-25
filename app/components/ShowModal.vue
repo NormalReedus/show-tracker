@@ -21,14 +21,14 @@
 			/>
 		</GridLayout>
 
-		<FlexboxLayout class="data-section" width="100%">
+		<FlexboxLayout class="data-section bg-default" width="100%">
 			<FlexboxLayout class="progress-container container">
-				<ProgressIndicator :lastWatched="show.lastWatched" width="100%" flexDirection="column" />
+				<ProgressIndicator :lastWatched="show.lastWatched" class="modal-progress-indicator" />
 			</FlexboxLayout>
 			<MiscData class="container" :show="show" />
 		</FlexboxLayout>
-		<ButtonWrapper>
-			<Button col="0" row="0" @tap="setProgress" class="button -primary">Set progress</Button>
+		<ButtonWrapper class="bg-default">
+			<Button col="0" row="0" @tap="setProgress" class="button -primary bg-accent">Set progress</Button>
 			<Button col="2" row="0" class="button bg-danger" @tap="removeShow">Remove show</Button>
 		</ButtonWrapper>
 	</StackLayout>
@@ -101,6 +101,11 @@ export default {
 .progress-container {
 	justify-content: center;
 	width: 50%;
+}
+
+.modal-progress-indicator {
+	width: 100%;
+	flex-direction: column;
 }
 
 .button {

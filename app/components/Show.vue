@@ -20,7 +20,7 @@
 			<!-- star icon -->
 			<Label v-if="show.favorite" row="1" col="2" text="" class="favorite-card fas" />
 		</GridLayout>
-		<ProgressIndicator :lastWatched="show.lastWatched" marginTop="5" width="60%" justifyContent="space-around" />
+		<ProgressIndicator :lastWatched="show.lastWatched" class="progress-indicator" />
 	</FlexboxLayout>
 </template>
 
@@ -80,5 +80,11 @@ export default {
 	color: yellowgreen;
 
 	text-shadow: 2 2 6 black;
+}
+
+.progress-indicator {
+	margin-top: 5;
+	width: 60%;
+	justify-content: space-around;
 }
 </style>

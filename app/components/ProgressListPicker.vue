@@ -1,18 +1,18 @@
 <template>
 	<FlexboxLayout class="listpicker-wrapper">
-		<FlexboxLayout justifyContent="space-around" class="listpicker-container">
+		<FlexboxLayout justifyContent="space-around" class="listpicker-container bg-default text-default">
 			<FlexboxLayout flexDirection="column" alignItems="center">
-				<Label class="text-uppercase h3">Season</Label>
+				<Label class="text-uppercase h3 text-default">Season</Label>
 				<!-- v-model uses index, not the items from show.seasonNums -->
 				<ListPicker :items="show.seasonNums" :selectedIndex="seas - 1" @selectedIndexChange="seas = $event.value + 1" />
 			</FlexboxLayout>
 			<FlexboxLayout flexDirection="column" alignItems="center">
-				<Label class="text-uppercase h3">Episode</Label>
+				<Label class="text-uppercase h3 text-default">Episode</Label>
 				<ListPicker :items="selectableEpisodes" v-model="ep" />
 			</FlexboxLayout>
 		</FlexboxLayout>
-		<ButtonWrapper>
-			<Button col="0" row="0" @tap="closeModal(true)" class="button -primary">Save</Button>
+		<ButtonWrapper class="bg-default">
+			<Button col="0" row="0" @tap="closeModal(true)" class="button -primary bg-accent">Save</Button>
 			<Button col="2" row="0" @tap="closeModal(false)" class="button">Cancel</Button>
 		</ButtonWrapper>
 	</FlexboxLayout>

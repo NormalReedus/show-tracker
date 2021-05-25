@@ -15,6 +15,8 @@
 </template>
 
 <script>
+//TODO: fix searchbar (custom component?)
+//TODO: make a nicer statusbar (transparent sb with an empty stacklayout with the height of sb?)
 //TODO: check if Tabs can handle updating without restarting
 //TODO: see if there is a way to style bottom nav tabs without hardcoding into template
 //TODO: remake dialogs as modals that can be styled
@@ -22,7 +24,7 @@
 //TODO: test light mode styling after all css classes have been applied and tweak colors
 //TODO: use BottomNavigation (not BottomNavigationBar) to overhaul the tabs in Home, so they can be styled with css like the rest
 // https://github.com/nativescript-community/ui-material-components/blob/master/demo-vue/app/examples/BottomNavigation.vue
-//! css overhaul is now at buttons in GroupList
+
 import Groups from '@/components/Groups'
 import Settings from '@/components/Settings'
 

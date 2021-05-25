@@ -40,14 +40,8 @@ export default {
 
 <style lang="scss" scoped>
 .grip {
-	// opacity: 0.2;
 	font-weight: 400;
 }
-
-// .group-item {
-// 	// set a bg-color that is not transparent
-// 	background: rgba(0, 0, 0, 0.1);
-// }
 
 .item-section {
 	margin: 0;
@@ -56,6 +50,7 @@ export default {
 
 .group-title {
 	font-size: 16;
+	margin-left: 10;
 }
 
 .icon {
