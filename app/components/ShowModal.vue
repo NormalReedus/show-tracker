@@ -28,8 +28,8 @@
 			<MiscData class="container" :show="show" />
 		</FlexboxLayout>
 		<ButtonWrapper class="bg-default">
-			<Button col="0" row="0" @tap="setProgress" class="button -primary bg-accent">Set progress</Button>
-			<Button col="2" row="0" class="button bg-danger" @tap="removeShow">Remove show</Button>
+			<Button col="0" row="0" @tap="setProgress" class="button text-accent-contrast bg-accent">Set progress</Button>
+			<Button col="2" row="0" class="button text-accent-contrast bg-danger" @tap="removeShow">Remove show</Button>
 		</ButtonWrapper>
 	</StackLayout>
 </template>

@@ -33,5 +33,6 @@ export default {}
 	font-size: 50;
 	margin-top: 5;
 	margin-bottom: 5;
+	width: 100%;
 }
 </style>

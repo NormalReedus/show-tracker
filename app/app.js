@@ -7,6 +7,8 @@ import RadListView from 'nativescript-ui-listview/vue'
 Vue.use(RadListView)
 import TabsPlugin from '@nativescript-community/ui-material-tabs/vue'
 Vue.use(TabsPlugin)
+import BottomNavigation from '@nativescript-community/ui-material-bottom-navigation/vue'
+Vue.use(BottomNavigation)
 
 new Vue({
 	render: h => h('frame', [h(Home)]),

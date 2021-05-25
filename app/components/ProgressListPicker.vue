@@ -12,8 +12,8 @@
 			</FlexboxLayout>
 		</FlexboxLayout>
 		<ButtonWrapper class="bg-default">
-			<Button col="0" row="0" @tap="closeModal(true)" class="button -primary bg-accent">Save</Button>
-			<Button col="2" row="0" @tap="closeModal(false)" class="button">Cancel</Button>
+			<Button col="0" row="0" @tap="closeModal(true)" class="button text-accent-contrast bg-accent">Save</Button>
+			<Button col="2" row="0" @tap="closeModal(false)" class="button bg-alt">Cancel</Button>
 		</ButtonWrapper>
 	</FlexboxLayout>
 </template>

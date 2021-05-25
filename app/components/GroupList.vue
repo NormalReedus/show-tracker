@@ -41,6 +41,7 @@ export default {
 <style lang="scss" scoped>
 .grip {
 	font-weight: 400;
+	font-size: 20;
 }
 
 .item-section {
@@ -50,12 +51,17 @@ export default {
 
 .group-title {
 	font-size: 16;
+	font-weight: 500;
 	margin-left: 10;
 }
 
 .icon {
+	&-left {
+		font-size: 18;
+	}
 	&-right {
 		margin-left: 10;
+		width: 30;
 		font-size: 24;
 	}
 }

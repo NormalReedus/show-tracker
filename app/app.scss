@@ -1,5 +1,5 @@
 @import '@nativescript/theme/core';
-@import '@nativescript/theme/default';
+// @import '@nativescript/theme/default';
 
 // Place any CSS rules you want to apply on both iOS and Android here.
 // This is where the vast majority of your CSS code goes.
@@ -34,7 +34,7 @@ $bg-alt-light: #f0f0f0;
 $text-dark: #ffffff;
 $text-light: #3f3f3f;
 // delete btns etc
-$danger-clr-dark: #9f3c3c;
+$danger-clr-dark: #be5454;
 $danger-clr-light: #b14a4a;
 // use for search bar with icons?
 // $text-muted-dark: #b3b3b3;
@@ -43,11 +43,11 @@ $danger-clr-light: #b14a4a;
 $text-muted-deep-dark: #6f6f6f;
 $text-muted-deep-light: #979797;
 // selected tabs / CTA btns
-$accent-dark: #63cdff;
-$accent-light: #1699d6;
+$accent-dark: #4cc4fc;
+$accent-light: #0793d4;
 // unselected but selectable tabs etc
-$accent-muted-dark: #b5d4e3;
-$accent-muted-light: #6ec4ec;
+$accent-muted-dark: #acd9f1;
+$accent-muted-light: #115f83;
 
 //* DARK MODE
 .bg-default {
@@ -58,6 +58,9 @@ $accent-muted-light: #6ec4ec;
 }
 .text-default {
 	color: $text-dark;
+}
+.text-accent-contrast {
+	color: $bg-dark;
 }
 .bg-danger {
 	background: $danger-clr-dark;
@@ -82,8 +85,14 @@ $accent-muted-light: #6ec4ec;
 	border-color: $accent-dark;
 	border-radius: 4;
 }
-.tab-active-accent {
+.top-tab-strip {
 	highlight-color: $accent-dark;
+	selected-item-color: $accent-dark;
+	un-selected-item-color: $text-dark;
+}
+.bottom-tab-strip {
+	selected-item-color: $accent-dark;
+	un-selected-item-color: $text-dark;
 }
 // .bg-accent-muted {
 // 	background: $accent-muted-dark;
@@ -101,6 +110,9 @@ $accent-muted-light: #6ec4ec;
 	}
 	.text-default {
 		color: $text-light;
+	}
+	.text-accent-contrast {
+		color: $bg-light;
 	}
 	.bg-danger {
 		background: $danger-clr-light;
@@ -124,8 +136,14 @@ $accent-muted-light: #6ec4ec;
 		color: $accent-light;
 		border-radius: 4;
 	}
-	.tab-active-accent {
+	.top-tab-strip {
 		highlight-color: $accent-light;
+		selected-item-color: $accent-light;
+		un-selected-item-color: $text-light;
+	}
+	.bottom-tab-strip {
+		selected-item-color: $accent-light;
+		un-selected-item-color: $text-light;
 	}
 	// .bg-accent-muted {
 	// 	background: $accent-muted-light;
