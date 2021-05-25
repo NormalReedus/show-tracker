@@ -80,6 +80,9 @@ $accent-muted-light: #abd5e9;
 .border-accent {
 	border-color: $accent-dark;
 }
+.tab-active-accent {
+	highlight-color: $accent-dark;
+}
 .bg-accent-muted {
 	background: $accent-muted-dark;
 }
@@ -117,6 +120,9 @@ $accent-muted-light: #abd5e9;
 	}
 	.border-accent {
 		color: $accent-light;
+	}
+	.tab-active-accent {
+		highlight-color: $accent-light;
 	}
 	.bg-accent-muted {
 		background: $accent-muted-light;

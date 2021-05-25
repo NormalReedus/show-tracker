@@ -1,8 +1,8 @@
 <template>
 	<StackLayout>
 		<MDTabs>
-			<MDTabStrip class="tab-strip">
-				<MDTabStripItem class="tab-text" v-for="(group, i) of groups" :key="i">
+			<MDTabStrip class="tab-strip bg-alt tab-active-accent">
+				<MDTabStripItem class="strip-text text-default" v-for="(group, i) of groups" :key="i">
 					<Label>{{ group.title }}</Label>
 				</MDTabStripItem>
 			</MDTabStrip>
@@ -31,7 +31,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tab-text {
+.strip-text {
 	// have to reset the font-size from tab-icon for some reason
 	font-size: 12;
 }
