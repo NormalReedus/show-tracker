@@ -1,9 +1,14 @@
 <template>
 	<FlexboxLayout class="search">
 		<!-- magnifying glass -->
-		<TextField :text="value" @textChange="$emit('input', $event.value)" class="search-field fas" hint=" " />
+		<TextField
+			:text="value"
+			@textChange="$emit('input', $event.value)"
+			class="search-field fas placeholder text-default"
+			hint=" "
+		/>
 		<!-- X icon -->
-		<Label class="fas clear-btn" @tap="$emit('clear')"></Label>
+		<Label class="fas clear-btn text-disabled" @tap="$emit('clear')"></Label>
 	</FlexboxLayout>
 </template>
 
@@ -27,11 +32,11 @@ export default {
 	justify-content: space-between;
 
 	&-field {
-		width: 80%;
 		padding-bottom: 8;
 		font-size: 16;
 		font-weight: 400;
 		border-width: 0;
+		flex-grow: 1;
 	}
 }
 

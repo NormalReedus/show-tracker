@@ -4,7 +4,7 @@
 			<FlexboxLayout class="pad-md bg-alt" alignItems="center" justifyContent="space-between">
 				<StackLayout orientation="horizontal" class="item-section">
 					<!-- grip icon -->
-					<Label class="fas grip text-disabled-deep"></Label>
+					<Label class="fas grip text-disabled"></Label>
 					<Label class="group-title text-default">{{ group.title }}</Label>
 				</StackLayout>
 				<StackLayout orientation="horizontal" class="item-section">

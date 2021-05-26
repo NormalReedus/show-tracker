@@ -63,12 +63,6 @@ export default {
 		removeShow(imdbId) {
 			this.$store.dispatch('removeShow', { group: this.group, imdbId })
 		},
-
-		// clearFocus(e) {
-		// 	const field = e.object
-
-		// 	field.android.clearFocus()
-		// },
 	},
 }
 

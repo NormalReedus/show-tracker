@@ -8,12 +8,17 @@ import { setString, getString } from '@nativescript/core/application-settings'
 import Group from '~/backend/Group'
 import Show from '~/backend/Show'
 
+import Alert from '@/components/dialogs/Alert'
+import Confirm from '@/components/dialogs/Confirm'
+import Prompt from '@/components/dialogs/Prompt'
+
 const STORAGE_KEY = 'groups'
 
 const store = new Vuex.Store({
 	state: {
 		groups: [],
 	},
+
 	mutations: {
 		addGroup(state, group) {
 			state.groups.push(group)
@@ -38,21 +43,30 @@ const store = new Vuex.Store({
 
 	actions: {
 		async newGroup({ dispatch, commit, state }) {
-			const res = await prompt({
-				title: 'Create group',
-				message: 'Choose a title for the group.',
-				okButtonText: 'Done',
-				cancelButtonText: 'Take me back',
+			const res = await Vue.showModal(Prompt, {
+				props: {
+					title: 'Create group',
+					message: 'Choose a title for the group.',
+					okButtonText: 'Done',
+					cancelButtonText: 'Take me back',
+					placeholderText: 'Group title',
+				},
 			})
 
 			// canceled by user
 			if (!res.result) return
 
+			if (res.text) {
+				res.text = res.text.trim()
+			}
+
 			if (res.text === '') {
-				alert({
-					title: 'Could not create group',
-					message: `A group cannot have an empty name.`,
-					okButtonText: 'Alright',
+				Vue.showModal(Alert, {
+					props: {
+						title: 'Could not create group',
+						message: 'A group cannot have an empty name.',
+						okButtonText: 'Alright',
+					},
 				})
 
 				return
@@ -63,10 +77,12 @@ const store = new Vuex.Store({
 
 			// group name is taken
 			if (titleExists !== -1) {
-				alert({
-					title: 'Could not create group',
-					message: `There is already a group with the title '${res.text}'.`,
-					okButtonText: 'Alright',
+				Vue.showModal(Alert, {
+					props: {
+						title: 'Could not create group',
+						message: `There is already a group with the title '${res.text}'.`,
+						okButtonText: 'Alright',
+					},
 				})
 
 				return
@@ -76,26 +92,29 @@ const store = new Vuex.Store({
 				const group = new Group(res.text)
 				commit('addGroup', group)
 			} catch (err) {
-				alert({
-					title: 'Could not create group',
-					message: `There was an error creating the group.`,
-					okButtonText: 'Alright',
+				Vue.showModal(Alert, {
+					props: {
+						title: 'Could not create group',
+						message: 'There was an error creating the group.',
+						okButtonText: 'Alright',
+					},
 				})
 
 				return
 			}
 
-			restart()
-
 			dispatch('saveData')
 		},
 
 		async removeGroup({ dispatch, commit }, title) {
-			const res = await confirm({
-				title: 'Remove group?',
-				message: `Are you sure you want to remove the group '${title}'?`,
-				okButtonText: 'Yup',
-				cancelButtonText: 'Nah',
+			const res = await Vue.showModal(Confirm, {
+				props: {
+					title: 'Remove group?',
+					message: `Are you sure you want to remove the group '${title}'?`,
+					okButtonText: 'Yup',
+					cancelButtonText: 'Nah',
+					danger: true,
+				},
 			})
 
 			// canceled by user
@@ -109,22 +128,31 @@ const store = new Vuex.Store({
 		},
 
 		async renameGroup({ dispatch, commit }, group) {
-			const res = await prompt({
-				title: 'Rename group',
-				message: `Choose a new title for the group '${group.title}'.`,
-				defaultText: group.title,
-				okButtonText: 'Done',
-				cancelButtonText: 'Take me back',
+			const res = await Vue.showModal(Prompt, {
+				props: {
+					title: 'Rename group',
+					message: `Choose a new title for the group '${group.title}'.`,
+					defaultText: group.title,
+					okButtonText: 'Done',
+					cancelButtonText: 'Take me back',
+					placeholderText: 'Group title',
+				},
 			})
 
 			// canceled by user
 			if (!res.result) return
 
+			if (res.text) {
+				res.text = res.text.trim()
+			}
+
 			if (res.text === '') {
-				alert({
-					title: 'Could not rename group',
-					message: `A group cannot have an empty name.`,
-					okButtonText: 'Alright',
+				Vue.showModal(Alert, {
+					props: {
+						title: 'Could not rename group',
+						message: 'A group cannot have an empty name.',
+						okButtonText: 'Alright',
+					},
 				})
 
 				return
@@ -137,21 +165,30 @@ const store = new Vuex.Store({
 
 		// does not commit since adding groups is async...
 		async newShow({ dispatch }, group) {
-			const res = await prompt({
-				title: 'New show',
-				message: `Add a show to the group '${group.title}'.`,
-				okButtonText: 'Done',
-				cancelButtonText: 'Take me back',
+			const res = await Vue.showModal(Prompt, {
+				props: {
+					title: 'New show',
+					message: `Add a show to the group '${group.title}'.`,
+					okButtonText: 'Done',
+					cancelButtonText: 'Take me back',
+					placeholderText: 'Show title',
+				},
 			})
 
 			// cancelled by user
 			if (!res.result) return
 
+			if (res.text) {
+				res.text = res.text.trim()
+			}
+
 			if (group.showExists(res.text)) {
-				alert({
-					title: 'Error',
-					message: `The show: ${res.text} already exists in this group.`,
-					okButtonText: 'Alright',
+				Vue.showModal(Alert, {
+					props: {
+						title: 'Error',
+						message: `The show: ${res.text} already exists in this group.`,
+						okButtonText: 'Alright',
+					},
 				})
 				return
 			}
@@ -159,10 +196,12 @@ const store = new Vuex.Store({
 			const err = await group.addShow(res.text)
 
 			if (err) {
-				alert({
-					title: 'Error',
-					message: err,
-					okButtonText: 'Alright',
+				Vue.showModal(Alert, {
+					props: {
+						title: 'Error',
+						message: err,
+						okButtonText: 'Alright',
+					},
 				})
 				return
 			}
@@ -201,19 +240,23 @@ const store = new Vuex.Store({
 			try {
 				await clipboard.setText(JSON.stringify(state.groups))
 			} catch (err) {
-				alert({
-					title: 'Error',
-					message: 'There was an error exporting groups',
-					okButtonText: 'Alright',
+				Vue.showModal(Alert, {
+					props: {
+						title: 'Error',
+						message: 'There was an error exporting groups',
+						okButtonText: 'Alright',
+					},
 				})
 				console.error(err)
 				return
 			}
 
-			alert({
-				title: 'Export groups',
-				message: 'Your groups have been copied to the clipboard.',
-				okButtonText: 'Yup',
+			Vue.showModal(Alert, {
+				props: {
+					title: 'Export groups',
+					message: 'Your groups have been copied to the clipboard.',
+					okButtonText: 'Alright',
+				},
 			})
 		},
 
@@ -227,20 +270,25 @@ const store = new Vuex.Store({
 				// generate groups and shows (with methods etc) from static json
 				groups = Group.importGroups(clipboardContent)
 			} catch (err) {
-				alert({
-					title: 'Error',
-					message: 'There was an error importing groups. Make sure you have the exported groups in your clipboard.',
-					okButtonText: 'Alright',
+				Vue.showModal(Alert, {
+					props: {
+						title: 'Error',
+						message: 'There was an error importing groups. Make sure you have the exported groups in your clipboard.',
+						okButtonText: 'Alright',
+					},
 				})
 				console.error(err)
 				return
 			}
 
-			const res = await confirm({
-				title: 'Overwrite groups?',
-				message: 'Would you like to overwrite existing groups or append groups to the already existing groups?',
-				okButtonText: 'Overwrite',
-				cancelButtonText: 'Append',
+			const res = await Vue.showModal(Confirm, {
+				props: {
+					title: 'Overwrite groups?',
+					message: 'Would you like to overwrite existing groups or append groups to the already existing groups?',
+					okButtonText: 'Overwrite',
+					cancelButtonText: 'Append',
+					danger: true,
+				},
 			})
 
 			if (res) {

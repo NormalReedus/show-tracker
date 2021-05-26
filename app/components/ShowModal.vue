@@ -39,6 +39,7 @@ import ProgressListPicker from '@/components/ProgressListPicker'
 import ProgressIndicator from '@/components/ProgressIndicator'
 import ButtonWrapper from '@/components/ButtonWrapper'
 import MiscData from '@/components/ShowMiscData'
+import Confirm from '@/components/dialogs/Confirm'
 
 export default {
 	components: {
@@ -59,11 +60,14 @@ export default {
 			this.$store.dispatch('toggleFavorite', this.show)
 		},
 		async removeShow() {
-			const res = await confirm({
-				title: 'Remove show?',
-				message: 'Are you sure you want to remove this show?',
-				okButtonText: 'Yup',
-				cancelButtonText: 'Nah',
+			const res = await this.$showModal(Confirm, {
+				props: {
+					title: 'Remove show?',
+					message: `Are you sure you want to remove the show '${this.show.title}'?`,
+					okButtonText: 'Yup',
+					cancelButtonText: 'Nah',
+					danger: true,
+				},
 			})
 
 			if (res) {
@@ -108,9 +112,6 @@ export default {
 	flex-direction: column;
 }
 
-.button {
-	width: 100%;
-}
 .favorite-modal {
 	top: 10%;
 	left: 90%;

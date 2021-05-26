@@ -1,8 +1,4 @@
 @import '@nativescript/theme/core';
-// @import '@nativescript/theme/default';
-
-// Place any CSS rules you want to apply on both iOS and Android here.
-// This is where the vast majority of your CSS code goes.
 
 // Font icon class
 .fab {
@@ -40,8 +36,8 @@ $danger-clr-light: #b14a4a;
 // $text-muted-dark: #b3b3b3;
 // $text-muted-light: #464646;
 // search icon
-$text-muted-deep-dark: #6f6f6f;
-$text-muted-deep-light: #979797;
+$text-muted-dark: #6f6f6f;
+$text-muted-light: #979797;
 // selected tabs / CTA btns
 $accent-dark: #4cc4fc;
 $accent-light: #0793d4;
@@ -50,6 +46,9 @@ $accent-muted-dark: #acd9f1;
 $accent-muted-light: #115f83;
 
 //* DARK MODE
+.status-bar {
+	android-status-bar-background: $bg-alt-dark;
+}
 .bg-default {
 	background: $bg-dark;
 }
@@ -71,8 +70,11 @@ $accent-muted-light: #115f83;
 // .text-disabled {
 // 	color: $text-muted-dark;
 // }
-.text-disabled-deep {
-	color: $text-muted-deep-dark;
+.text-disabled {
+	color: $text-muted-dark;
+}
+.placeholder {
+	placeholder-color: $text-muted-dark;
 }
 .bg-accent {
 	background: $accent-dark;
@@ -81,10 +83,10 @@ $accent-muted-light: #115f83;
 .text-accent {
 	color: $accent-dark;
 }
-// .border-alt {
-// 	border-color: $bg-alt-dark;
-// 	border-bottom-width: 2;
-// }
+.border-alt {
+	border-color: $bg-alt-dark;
+	// border-bottom-width: 2;
+}
 // .btn-border-accent {
 // 	border-color: $accent-dark;
 // 	background: $bg-dark;
@@ -113,39 +115,56 @@ $accent-muted-light: #115f83;
 }
 //* LIGHT MODE
 .ns-light {
+	&.status-bar,
+	.status-bar {
+		android-status-bar-background: $bg-alt-dark;
+	}
+	&.bg-default,
 	.bg-default {
 		background: $bg-light;
 	}
+	&.bg-alt,
 	.bg-alt {
 		background: $bg-alt-light;
 	}
+	&.text-default,
 	.text-default {
 		color: $text-light;
 	}
+	&.text-accent-contrast,
 	.text-accent-contrast {
 		color: $bg-light;
 	}
+	&.bg-danger,
 	.bg-danger {
 		background: $danger-clr-light;
 	}
+	&.text-danger,
 	.text-danger {
 		color: $danger-clr-light;
 	}
 	// .text-disabled {
 	// 	color: $text-muted-light;
 	// }
-	.text-disabled-deep {
-		color: $text-muted-deep-light;
+	&.text-disabled,
+	.text-disabled {
+		color: $text-muted-light;
 	}
+	&.placeholder,
+	.placeholder {
+		placeholder-color: $text-muted-light;
+	}
+	&.bg-accent,
 	.bg-accent {
 		background: $accent-light;
 	}
+	&.text-accent,
 	.text-accent {
 		color: $accent-light;
 	}
-	// .border-alt {
-	// 	border-color: $bg-alt-light;
-	// }
+	.border-alt {
+		border-color: $bg-alt-light;
+	}
 	// .btn-border-accent {
 	// 	border-color: $accent-light;
 	// 	color: $accent-light;
@@ -154,11 +173,13 @@ $accent-muted-light: #115f83;
 	// 	border-width: 1;
 	// 	font-weight: 500;
 	// }
+	&.top-tab-strip,
 	.top-tab-strip {
 		highlight-color: $accent-light;
 		selected-item-color: $accent-light;
 		un-selected-item-color: $text-light;
 	}
+	&.bottom-tab-strip,
 	.bottom-tab-strip {
 		selected-item-color: $accent-light;
 		un-selected-item-color: $text-light;
@@ -166,6 +187,7 @@ $accent-muted-light: #115f83;
 	// .bg-accent-muted {
 	// 	background: $accent-muted-light;
 	// }
+	&.text-accent-muted,
 	.text-accent-muted {
 		color: $accent-muted-light;
 	}

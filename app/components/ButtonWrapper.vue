@@ -10,8 +10,11 @@ export default {}
 
 <style lang="scss" scoped>
 .button-wrapper {
-	padding-left: 16;
-	padding-right: 16;
-	padding-top: 8;
+	padding-left: 12;
+	padding-right: 12;
+
+	button {
+		width: 100%;
+	}
 }
 </style>
