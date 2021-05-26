@@ -1,7 +1,9 @@
 <template>
 	<ScrollView>
+		<!-- custom design -->
 		<StackLayout>
 			<SearchBar v-model="filterQuery" @loaded="clearFocus" hint="Filter" class="search-bar bg-default text-default" />
+			<StackLayout class="line bg-alt"> </StackLayout>
 			<FlexboxLayout flexWrap="wrap">
 				<Show v-for="show of displayShows" :key="show.imdbId" :show="show" @removeShow="removeShow" />
 				<AddShow @addShow="addShow" />
@@ -11,6 +13,10 @@
 </template>
 
 <script>
+//TODO: custom search bar
+// material design: https://market.nativescript.org/plugins/nativescript-nbmaterial-search/
+// this? https://market.nativescript.org/plugins/nativescript-search-view/
+//
 import fuzzy from 'fuzzy'
 
 import Show from '@/components/Show'
@@ -74,6 +80,13 @@ function favoriteSort(a, b) {
 
 <style lang="scss" scoped>
 .search-bar {
+	// margin-bottom: 10;
+	font-size: 16;
+}
+
+.line {
+	width: 90%;
+	height: 1;
 	margin-bottom: 10;
 }
 </style>

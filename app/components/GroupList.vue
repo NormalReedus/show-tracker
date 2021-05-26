@@ -9,7 +9,7 @@
 				</StackLayout>
 				<StackLayout orientation="horizontal" class="item-section">
 					<!-- pen icon -->
-					<Label class="fas icon icon-left text-accent-muted" @tap="renameGroup(group)"></Label>
+					<Label class="fas icon icon-left text-accent" @tap="renameGroup(group)"></Label>
 					<!-- X icon -->
 					<Label class="fas icon icon-right text-danger" @tap="removeGroup(group.title)"></Label>
 				</StackLayout>

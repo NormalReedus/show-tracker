@@ -81,10 +81,14 @@ $accent-muted-light: #115f83;
 .text-accent {
 	color: $accent-dark;
 }
-.border-accent {
-	border-color: $accent-dark;
-	border-radius: 4;
-}
+// .btn-border-accent {
+// 	border-color: $accent-dark;
+// 	background: $bg-dark;
+// 	border-radius: 4;
+// 	border-width: 1;
+// 	color: $accent-dark;
+// 	font-weight: 500;
+// }
 .top-tab-strip {
 	highlight-color: $accent-dark;
 	selected-item-color: $accent-dark;
@@ -93,6 +97,9 @@ $accent-muted-light: #115f83;
 .bottom-tab-strip {
 	selected-item-color: $accent-dark;
 	un-selected-item-color: $text-dark;
+
+	transition: selected-item-color 500ms ease;
+	transition: un-selected-item-color 500ms ease;
 }
 // .bg-accent-muted {
 // 	background: $accent-muted-dark;
@@ -132,10 +139,14 @@ $accent-muted-light: #115f83;
 	.text-accent {
 		color: $accent-light;
 	}
-	.border-accent {
-		color: $accent-light;
-		border-radius: 4;
-	}
+	// .btn-border-accent {
+	// 	border-color: $accent-light;
+	// 	color: $accent-light;
+	// 	background: $bg-light;
+	// 	border-radius: 4;
+	// 	border-width: 1;
+	// 	font-weight: 500;
+	// }
 	.top-tab-strip {
 		highlight-color: $accent-light;
 		selected-item-color: $accent-light;

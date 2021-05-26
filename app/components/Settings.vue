@@ -1,9 +1,9 @@
 <template>
 	<ScrollView>
 		<StackLayout>
-			<Button @tap="importGroups" class="-outline border-accent">Import groups</Button>
-			<Button @tap="exportGroups" class="-outline border-accent">Export groups</Button>
-			<Button @tap="newGroup" class="-outline border-accent">New group</Button>
+			<Button @tap="importGroups" class="bg-alt">Import groups</Button>
+			<Button @tap="exportGroups" class="bg-alt">Export groups</Button>
+			<Button @tap="newGroup" class="bg-accent text-accent-contrast">New group</Button>
 			<GroupList class="group-list" />
 		</StackLayout>
 	</ScrollView>
