@@ -22,7 +22,8 @@
 </template>
 
 <script>
-//TODO: use MD-ripple for e.g. add show https://github.com/nativescript-community/ui-material-components
+//TODO: use MD-ripple for e.g. add show and label buttons such as the clear btn for search
+// https://github.com/nativescript-community/ui-material-components
 //TODO: recreate the theme skin styles
 // button outlines, button color (use the inverse text color class), default button bg,
 //TODO: fix some shows not saving miscdata correctly (create batwoman, close app, reopen and look in modal)
