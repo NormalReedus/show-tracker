@@ -339,7 +339,7 @@ const store = new Vuex.Store({
 			setString(STORAGE_KEY, data)
 		},
 
-		// take json from application-settings and load like when importing groups (with overwrite)
+		// only on launch - take json from application-settings and load like when importing groups (with overwrite)
 		loadData({ commit }) {
 			// return null if there is nothing in application-settings
 			const jsonData = getString(STORAGE_KEY, null)
@@ -349,6 +349,9 @@ const store = new Vuex.Store({
 			const groups = Group.importGroups(jsonData)
 
 			commit('overwriteGroups', groups)
+
+			// updating is done after loading data, but saves data when done
+			store.dispatch('updateShows')
 		},
 	},
 })
