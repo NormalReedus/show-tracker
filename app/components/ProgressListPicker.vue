@@ -8,7 +8,7 @@
 			</FlexboxLayout>
 			<FlexboxLayout flexDirection="column" alignItems="center">
 				<Label class="text-uppercase h3 text-default">Episode</Label>
-				<ListPicker :items="selectableEpisodes" v-model="ep" />
+				<ListPicker :items="selectableEpisodes" v-model="epHandler" />
 			</FlexboxLayout>
 		</FlexboxLayout>
 		<ButtonWrapper class="bg-default">
@@ -40,6 +40,19 @@ export default {
 	}),
 
 	computed: {
+		//! {check} if needed when new season / ep system is implemented
+		epHandler: {
+			get() {
+				return this.ep
+			},
+			set(episodeNum) {
+				// can't go below 0
+				episodeNum = Math.max(0, val)
+
+				this.ep = episodeNum
+			},
+		},
+
 		items() {
 			// the getter for is just pluralized from the property
 			// this.show.lastWatched.seasonNum => this.show.seasonNums, and the same for episodeNum(s)
@@ -58,6 +71,7 @@ export default {
 				return
 			}
 
+			// handled in ShowModal
 			this.$modal.close({
 				seas: this.seas,
 				ep: this.ep,

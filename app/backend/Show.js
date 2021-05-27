@@ -31,6 +31,8 @@ class Show {
 		this.title = null
 		this.poster = null
 		this.imdbId = null
+		// only ever set this to the actual show's totalSeasons for consistency
+		// since we manipulate this sometimes if there is an unreleased season
 		this.totalSeasons = null
 		this.seasons = null
 		this.nextAirDate = null // next airing ep (not the next after the one watched)
@@ -80,9 +82,22 @@ class Show {
 
 		const seasons = await Promise.all(seasonPromises)
 
-		// for some reason there are non-released eps included
-		for (const season of seasons) {
+		// clean up episodes and seasons
+		for (const [i, season] of seasons.entries()) {
+			// for some reason there are non-released eps included
 			season.Episodes = season.Episodes.filter(ep => ep.Released !== 'N/A')
+
+			// sometimes a new season is announced, but the eps are N/A, which creates an empty season
+			// remove empty seasons if they are the latest season that does not yet have any released eps
+			if (i === seasons.length - 1 && season.Episodes.length === 0) {
+				seasons.pop()
+
+				// we decrement totalSeasons to match that we removed the empty season
+				// totalSeasons is used to loop through seasons during runtime, so we will get an out of bounds error if we don't do this
+				// whenever this func is called (init and update), we reset totalSeasons to the original
+				// which will allow us to catch if new eps are released, and thus the season will not be popped
+				this.totalSeasons--
+			}
 		}
 
 		this.seasons = seasons
@@ -113,17 +128,6 @@ class Show {
 
 		// subtract the number of eps watched in current season
 		this.episodesLeft = epsInSeasons - this.lastWatched.episodeNum
-	}
-
-	// whether the update time interval has passed or not
-	get _shouldUpdate() {
-		function hrsToMs(hrs) {
-			return hrs * 60 * 60 * 1000
-		}
-
-		const intervalMs = hrsToMs(Show.UPDATE_INTERVAL_HOURS)
-
-		return Date.now() - intervalMs > this.lastUpdated
 	}
 
 	//* SHORTCUTS
@@ -170,14 +174,26 @@ class Show {
 	getSeasonEpisodeNums(seasonNum) {
 		// trying to get eps for season after the last (when all have been watched), you can only set ep to 0
 		if (seasonNum === this.seasons.length + 1) {
-			//! +1
 			return [0]
 		}
 
-		return this.seasons[seasonNum - 1].Episodes.map((_, index) => index)
+		const seasonEps = this.seasons[seasonNum - 1].Episodes
+
+		return seasonEps.map((_, index) => index)
 	}
 
-	//* CONTROLLERS
+	// whether the update time interval has passed or not
+	get _shouldUpdate() {
+		function hrsToMs(hrs) {
+			return hrs * 60 * 60 * 1000
+		}
+
+		const intervalMs = hrsToMs(Show.UPDATE_INTERVAL_HOURS)
+
+		return Date.now() - intervalMs > this.lastUpdated
+	}
+
+	//* ACTIONS
 
 	// call this before accessing any props that are fetched from APIS
 	async update() {
@@ -186,8 +202,7 @@ class Show {
 		const res = await omdbGet({ imdbId: this.imdbId })
 		this.totalSeasons = res.totalSeasons // needed for the rest
 
-		this._setNextAirDate()
-		await this._setSeasons()
+		await Promise.all([this._setNextAirDate(), this._setSeasons()])
 
 		// Await the last block to make sure update() always finished completely when awaited
 		await Promise.all([this._setNextRuntime(), this._setEpisodesLeft()])
@@ -196,7 +211,6 @@ class Show {
 	}
 
 	async setProgress({ seas, ep }) {
-		// await this.update()
 		this.update()
 
 		// setting season to last season (everything watched) only allows episode to be 0, so it is set to 0 regardless of ep's value

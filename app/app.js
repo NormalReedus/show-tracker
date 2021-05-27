@@ -16,6 +16,9 @@ const app = new Vue({
 	store,
 })
 
+// update all shows on launch
+store.dispatch('updateShows')
+
 // custom function to show modals from Vuex
 Vue.showModal = function(component, options) {
 	return new Promise(resolve => {
