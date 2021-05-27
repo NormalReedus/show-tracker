@@ -4,7 +4,13 @@
 			<Label textWrap="true" class="h2 title text-default">{{ title }}</Label>
 			<Label textWrap="true" class="message text-default">{{ message }}</Label>
 		</StackLayout>
-		<TextField v-model="text" class="text-field border-alt text-default placeholder" :hint="placeholderText" />
+		<TextField
+			@loaded="textfieldLoaded"
+			v-model="text"
+			autofocus
+			class="text-field border-alt text-default placeholder"
+			:hint="placeholderText"
+		/>
 		<ButtonWrapper>
 			<Button col="0" row="0" @tap="close(true)" class="text-accent-contrast bg-accent">{{ okButtonText }}</Button>
 			<Button col="2" row="0" class="text-default bg-alt" @tap="close(false)">{{ cancelButtonText }}</Button>
@@ -42,6 +48,12 @@ export default {
 	},
 
 	methods: {
+		textfieldLoaded(e) {
+			setTimeout(() => {
+				e.object.focus()
+			}, 100)
+		},
+
 		close(accept) {
 			let res
 			if (accept) {
