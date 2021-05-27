@@ -21,7 +21,6 @@
 <script>
 import dialog from '@/mixins/dialog'
 import ButtonWrapper from '@/components/ButtonWrapper'
-const utils = require('@nativescript/core/utils/utils')
 
 export default {
 	mixins: [dialog],
