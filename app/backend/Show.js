@@ -50,10 +50,11 @@ class Show {
 		this.imdbId = res.imdbID
 		this.totalSeasons = res.totalSeasons
 
-		this._setNextAirDate()
-		await this._setSeasons() // last 2 depend on this
-		this._setNextRuntime()
-		this._setEpisodesLeft()
+		await Promise.all([
+			this._setNextAirDate(),
+			this._setSeasons(), // last 2 depend on this
+		])
+		await Promise.all([this._setNextRuntime(), this._setEpisodesLeft()])
 	}
 
 	async _setNextAirDate() {

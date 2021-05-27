@@ -23,7 +23,6 @@
 
 <script>
 //TODO: fix some shows not saving miscdata correctly (create batwoman, close app, reopen and look in modal)
-//TODO: remake dialogs as modals that can be styled
 //TODO: Splash screen, icon, app name and version
 
 import Groups from '@/components/Groups'

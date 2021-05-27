@@ -1,7 +1,7 @@
 {
-	"name": "org.nativescript.showtracker",
+	"name": "showtracker",
 	"nativescript": {
-		"id": "org.nativescript.showtracker"
+		"id": "normalreedus.showtracker"
 	},
 	"main": "app/app.js",
 	"version": "0.1.0",

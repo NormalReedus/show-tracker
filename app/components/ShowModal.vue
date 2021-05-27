@@ -64,7 +64,7 @@ export default {
 				props: {
 					title: 'Remove show?',
 					message: `Are you sure you want to remove the show '${this.show.title}'?`,
-					okButtonText: 'Yup',
+					okButtonText: 'Remove',
 					cancelButtonText: 'Nah',
 					danger: true,
 				},

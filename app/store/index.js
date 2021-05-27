@@ -47,14 +47,14 @@ const store = new Vuex.Store({
 				props: {
 					title: 'Create group',
 					message: 'Choose a title for the group.',
-					okButtonText: 'Done',
-					cancelButtonText: 'Take me back',
+					okButtonText: 'Create',
+					cancelButtonText: 'Cancel',
 					placeholderText: 'Group title',
 				},
 			})
 
 			// canceled by user
-			if (!res.result) return
+			if (!res || !res.result) return
 
 			if (res.text) {
 				res.text = res.text.trim()
@@ -91,6 +91,10 @@ const store = new Vuex.Store({
 			try {
 				const group = new Group(res.text)
 				commit('addGroup', group)
+
+				restart()
+
+				dispatch('saveData')
 			} catch (err) {
 				Vue.showModal(Alert, {
 					props: {
@@ -102,8 +106,6 @@ const store = new Vuex.Store({
 
 				return
 			}
-
-			dispatch('saveData')
 		},
 
 		async removeGroup({ dispatch, commit }, title) {
@@ -111,7 +113,7 @@ const store = new Vuex.Store({
 				props: {
 					title: 'Remove group?',
 					message: `Are you sure you want to remove the group '${title}'?`,
-					okButtonText: 'Yup',
+					okButtonText: 'Remove',
 					cancelButtonText: 'Nah',
 					danger: true,
 				},
@@ -133,14 +135,14 @@ const store = new Vuex.Store({
 					title: 'Rename group',
 					message: `Choose a new title for the group '${group.title}'.`,
 					defaultText: group.title,
-					okButtonText: 'Done',
-					cancelButtonText: 'Take me back',
+					okButtonText: 'Rename',
+					cancelButtonText: 'Cancel',
 					placeholderText: 'Group title',
 				},
 			})
 
 			// canceled by user
-			if (!res.result) return
+			if (!res || !res.result) return
 
 			if (res.text) {
 				res.text = res.text.trim()
@@ -169,14 +171,14 @@ const store = new Vuex.Store({
 				props: {
 					title: 'New show',
 					message: `Add a show to the group '${group.title}'.`,
-					okButtonText: 'Done',
-					cancelButtonText: 'Take me back',
+					okButtonText: 'Create',
+					cancelButtonText: 'Cancel',
 					placeholderText: 'Show title',
 				},
 			})
 
 			// cancelled by user
-			if (!res.result) return
+			if (!res || !res.result) return
 
 			if (res.text) {
 				res.text = res.text.trim()
