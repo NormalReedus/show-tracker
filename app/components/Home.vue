@@ -22,8 +22,8 @@
 </template>
 
 <script>
-//TODO: fix some shows not saving miscdata correctly (create batwoman, close app, reopen and look in modal)
-//TODO: Splash screen, icon, app name and version
+//TODO: use type series in omdb query instead of all, and check if 'search' returns a list that can be chosen from if there are more than 1 hit
+//https://www.omdbapi.com/
 
 import Groups from '@/components/Groups'
 import Settings from '@/components/Settings'
