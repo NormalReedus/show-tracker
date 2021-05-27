@@ -18,11 +18,12 @@ async function omdbGet({ imdbId, seasonNum, title }) {
 	const omdbBaseUrl = process.env.OMDB_API_URL
 	const apiKey = process.env.OMDB_API_KEY
 
-	// seasonNum is ignored if not passed
+	// params are just ignored if they are not passed
 	const queryParams = {
 		apiKey,
 		i: imdbId,
 		t: title,
+		type: title ? 'series' : null, // when getting a show from a title, only find 'series', not movies
 		season: seasonNum,
 	}
 
