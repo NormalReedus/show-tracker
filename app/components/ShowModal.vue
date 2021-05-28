@@ -23,7 +23,7 @@
 
 		<FlexboxLayout class="data-section bg-default" width="100%">
 			<FlexboxLayout class="progress-container container">
-				<ProgressIndicator :progress="show.progress" class="modal-progress-indicator" />
+				<ProgressIndicator :show="show" class="modal-progress-indicator" />
 			</FlexboxLayout>
 			<MiscData class="container" :show="show" />
 		</FlexboxLayout>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-//! pass in the currentSeason length to progress indicator
+//! pass in the show to progress indicator
 
 import ProgressListPicker from '@/components/ProgressListPicker'
 import ProgressIndicator from '@/components/ProgressIndicator'

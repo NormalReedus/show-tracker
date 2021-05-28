@@ -20,12 +20,12 @@
 			<!-- star icon -->
 			<Label v-if="show.favorite" row="1" col="2" text="" class="favorite-card fas" />
 		</GridLayout>
-		<ProgressIndicator :progress="show.progress" class="progress-indicator" />
+		<ProgressIndicator :show="show" class="progress-indicator" />
 	</FlexboxLayout>
 </template>
 
 <script>
-//! pass in the currentSeason length to progress indicator
+//! pass in the show to progress indicator
 import ShowModal from '@/components/ShowModal'
 import ProgressIndicator from '@/components/ProgressIndicator'
 

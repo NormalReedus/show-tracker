@@ -6,19 +6,31 @@
 		</FlexboxLayout>
 		<FlexboxLayout class="progress-item">
 			<Label class="progress-item__label h6 text-uppercase text-default">Episode</Label>
-			<Label class="progress-item__number h1 text-default">{{ progress.episodeNum }}</Label>
+			<Label class="progress-item__number h1 text-default">{{ displayEpisodeNum }}</Label>
 		</FlexboxLayout>
 	</FlexboxLayout>
 </template>
 
 <script>
 //! create computed for episodeNum that displays a long dash if episodeNum === currentSeason.length
-//! this means the length will need to be passed in as well
+//! this means the show will need to be passed in as well (for the prop to be reactive)
 export default {
 	props: {
-		progress: {
+		show: {
 			type: Object,
 			required: true,
+		},
+	},
+
+	computed: {
+		progress() {
+			return this.show.progress
+		},
+
+		displayEpisodeNum() {
+			if (this.progress.episodeNum === this.show.currentSeason.length) return '—'
+
+			return this.progress.episodeNum
 		},
 	},
 }

@@ -72,11 +72,6 @@ function favoriteSort(a, b) {
 </script>
 
 <style lang="scss" scoped>
-// .search-bar {
-// 	// margin-bottom: 10;
-// 	font-size: 16;
-// }
-
 .line {
 	margin-left: 16;
 	margin-right: 16;

@@ -28,7 +28,7 @@ class Show {
 			//! that means that +1 will go directly to 1, 1 and -1 from there will go to 0, 0, but when at 0,0 there will be no looping through
 			//! season or anything like that, this behaviour should be intercepted in the top of every function - ALWAYS check if 0,0 is the state
 			//! and handle that differently than anything else
-			seasonNum: 1,
+			seasonNum: 0,
 			episodeNum: 0,
 		}
 		this.favorite = false
@@ -125,39 +125,38 @@ class Show {
 		let epsInSeasons = 0
 
 		// start iterator on the current season, since there is no need to count episodes of a whole (previous) season that is already watched
-		// seasonNum is 1 indexed, this.seasons is not, so we init iterator to seasonNum - 1
+		// seasonNum is 1 indexed, so we init iterator to seasonNum - 1
 		// but if seasonNum is 0 (not even started), we also just start at index 0
 		//! use Math.max(0, this.progress.seasonNum - 1) to not go below index 0 if series is not even started
-		for (let i = this.progress.seasonNum - 1; i < this.seasons.length; i++) {
+		for (let i = Math.max(0, this.progress.seasonNum - 1); i < this.seasons.length; i++) {
 			epsInSeasons += this.seasons[i].Episodes.length
 		}
 
 		// subtract the number of eps watched in current season
-		this.episodesLeft = epsInSeasons - this.progress.episodeNum //! this should work as is - I promise
+		this.episodesLeft = epsInSeasons - this.progress.episodeNum
 	}
 
 	//* SHORTCUTS
 
 	get _currentSeason() {
-		// returns undefined when last season has been watched //! this should no longer apply, just remove comment
+		// if we haven't started watching, current season is also just first season
 		//! if seasonNum === 0, return this.seasons[0]
+		if (this.progress.seasonNum === 0) {
+			return this.seasons[0]
+		}
+
 		return this.seasons[this.progress.seasonNum - 1]
 	}
 
 	get _nextSeason() {
-		// returns undefined when on last season or having watched last season //! should only apply when on last season, not having watched last season
+		// returns null when on last season
 		//! if this.progress.seasonNum === this.seasons.length return null
-
-		//! remove this block
-		if (this.progress.episodeNum === 0) {
-			// no eps watched of season means that next season us currently index of progress.seasonNum
-			return this._currentSeason
-		}
+		if (this.progress.seasonNum === this.seasons.length) return null
 
 		// when seasonNum is 0 (not begun watching yet), next season is index 0 as well (the first season)
 		// which is the only case in which the first season can be the nextSeason
 		// (and also currentSeason at the same time, since these are used for different things)
-		return this.seasons[this.progress.seasonNum] //! keep this as default, since seasonNum starts at 1, it will always match the next season index
+		return this.seasons[this.progress.seasonNum]
 	}
 
 	// only used for _setNextRuntime
@@ -170,46 +169,60 @@ class Show {
 		//! this even holds true if we are not begun (0, 0), since season 0 can only have ep 0, and currentSeason in that case actually returns season 1 as current,
 		//! where season 1 episode index 0 is the actual next episode
 
-		//! this block should be removed now that we cannot go beyond the last season
-		// returns undefined when there is no next episode
-		if (!this._currentSeason) {
-			// last season has been watched
-			return
+		if (this.progress.episodeNum === this._currentSeason.Episodes.length) {
+			if (!this._nextSeason) {
+				// we are on last episode of last season
+				return null
+			}
+
+			// we are on last episode of non-last season
+			return this._nextSeason.Episodes[0]
 		}
 
-		// there are more episodes in this season
-		// 'this season' being either the one in progress or the one just started
+		// we are not on last episode of season
+		// the following line even holds true if we have not begun watching (s0, e0), since s0 can only have e0, and currentSeason in that case actually returns s1,
+		// where s1 episode index 0 is the actual next episode
 		return this._currentSeason.Episodes[this.progress.episodeNum]
 	}
 
 	// returns a list of season numbers for the frontend
 	get seasonNums() {
-		const indices = this.seasons.map((_, index) => index + 1)
-		//! rewrite to for(let i = 1 .... .length)
+		// const indices = this.seasons.map((_, index) => index + 1)
+		//! rewrite to for(let i = 0 .... .length)
 
-		//! remove this, we don't need the extra dummy season
-		// we add one seasonNum to the list, since client can have watched the last season
-		// e.g. with 8 seasons nums could be 1, ..., 8, we want client to be able to say they have started the 9th season as well
-		indices.push(indices.length + 1)
+		// array of season numbers from 0 (not begun watching) to last season
+		const nums = []
+		// 0 and .length included, since seasonNums are actually 1-indexed, but 0 has semantic meaning
+		for (let i = 0; i <= this.seasons.length; i++) {
+			nums.push(i)
+		}
 
-		return indices
+		return nums
 	}
 
 	getSeasonEpisodeNums(seasonNum) {
-		//! remove this small block, we cannot set seasonNum beyond .length
-		// trying to get eps for season after the last (when all have been watched), you can only set ep to 0
-		if (seasonNum === this.seasons.length + 1) {
-			return [0]
-		}
-
 		// if user is trying to say they have watched nothing
 		// don't allow anything but 'nothing' as the episode either
 		//! if seasonNum === 0
 		//! return [0]
+		if (seasonNum === 0) return [0]
 
-		const seasonEps = this.seasons[seasonNum - 1].Episodes //! const seasonLength = this.seasons[seasonNum - 1].Episodes.length
+		//! const seasonLength = this.seasons[seasonNum - 1].Episodes.length
+		// const seasonEps = this.seasons[seasonNum - 1].Episodes
+		//! return index + 1, but do it exactly like in seasonNums with the for loop instead: rewrite to for(let i = 0 .... seasonLength)
+		// return seasonEps.map((_, index) => index)
 
-		return seasonEps.map((_, index) => index) //! return index + 1, but do it exactly like in seasonNums with the for loop instead: rewrite to for(let i = 1 .... seasonLength)
+		// this is not _currentSeason, since seasonNum is passed in from user
+		const seasonLength = this.seasons[seasonNum - 1].Episodes.length
+
+		// array of episode numbers from 1 to last ep of season
+		const nums = []
+		// 0 not included since it is already handled in the top statement of this function
+		for (let i = 1; i <= this.seasonLength; i++) {
+			nums.push(i)
+		}
+
+		return nums
 	}
 
 	// whether the update time interval has passed or not
@@ -244,10 +257,10 @@ class Show {
 		this.update()
 
 		//! change this block to only allow ep 0 on seas 0 instead of on length+1
-		// setting season to last season (everything watched) only allows episode to be 0, so it is set to 0 regardless of ep's value
-		if (seas === this.seasons.length + 1) {
+		// setting s0 (not begun watching) only allows e0
+		if (seas === 0) {
 			this.progress = {
-				seasonNum: seas,
+				seasonNum: 0,
 				episodeNum: 0,
 			}
 
@@ -257,9 +270,10 @@ class Show {
 
 		// no season under 1 (0 is handled above) or above the number of seasons available
 		//! if seas < 1 || seas > this.seasons.length: return
+		if (seas < 1 || seas > this.seasons.length) return
 
-		// no negative eps or higher than season length //! change to ep < 1 and seasonLength (not -1) - both in comment and code
-		if (ep < 0 || ep > this.seasons[seas - 1].Episodes.length - 1) return
+		// no eps under 1 or higher than season length //! change to ep < 1 and seasonLength (not -1) - both in comment and code
+		if (ep < 1 || ep > this.seasons[seas - 1].Episodes.length) return
 
 		this.progress = {
 			seasonNum: seas,
@@ -272,87 +286,84 @@ class Show {
 
 	async watchEpisode() {
 		this.update()
-		//! set shortcut variables for episode and season for the checks (cannot get around the full this. on assignment) - check if this makes sense
 
-		//! remove, this is not possible
-		if (!this._currentSeason) {
-			// all seasons have been watched
-			return
-		}
 		//! if this.progress.seasonNum === 0
 		//! set seasonNum and episodeNum to 1 and _setEpisodesLeft and return
+		if (this.progress.seasonNum === 0) {
+			// we haven't started watching
+			this.progress = {
+				seasonNum: 1,
+				episodeNum: 1,
+			}
+			await this._setEpisodesLeft()
+			return
+		}
 
 		const seasonLength = this._currentSeason.Episodes.length
 
-		//! rewrite to:
 		//! if this.progress.episodeNum === seasonLength
 		//! if !this._nextSeason // _nextSeason is always false on last season
-		// we are on last episode of last season
 		//! return
-		// we are on last episode of non-last season
 		//! increment season, set ep to 1
 		//! _setEpisodesLeft
-		// we are in the middle of a season
 		//! increment episodeNum
+		if (this.progress.episodeNum === seasonLength) {
+			// _nextSeason is always falsy on last season
+			if (!this._nextSeason) {
+				// we are on last ep of last season
+				return
+			}
 
-		//! delete everything from here except _setEpisodesLeft
-		if (this.progress.seasonNum === this.seasons.length + 1) {
-			// all seasons have been watched, episodeNum can only be 0 here
+			// we are on last ep of non-last season
+			this.progress.seasonNum++
+			this.progress.episodeNum = 1
+
+			await this._setEpisodesLeft()
 			return
 		}
 
-		if (this.progress.episodeNum < seasonLength - 1) {
-			// if next episode is not last episode of season
-			this.progress.episodeNum++
-		} else if (this.progress.seasonNum < this.seasons.length + 1) {
-			this.progress.seasonNum++
-			this.progress.episodeNum = 0
-		}
+		// we are in the middle of a season
+		this.progress.episodeNum++
 
-		// update episodes left when progress changes
 		await this._setEpisodesLeft()
 	}
 
 	async unwatchEpisode() {
 		this.update()
-		//! set shortcut variables for episode and season for the checks (cannot get around the full this. on assignment) - check if this makes sense
 
-		// haven't started watching, can't go lower
 		//! if season === 0 return
 
 		//! if episode === 1
 		//! if season === 1
-		// we are on first ep of first season
 		//! set season to 0 and ep to 0 and _setEpisodesLeft and return
-		// we are on first ep of non-first season
 		//! decrement this.progress.seasonNum and AFTERWARDS set this.progress.episode to this._currentSeason.Episodes.length
 		//! _setEpisodesLeft
-		// we are in the middle of a season
 		//! decrement this.progress.episodeNum
 
-		//! remove from here except last setEpisodesLeft
-		if (this.progress.episodeNum === 0) {
+		// haven't started watching - can't go lower
+		if (this.progress.seasonNum === 0) return
+
+		if (this.progress.episodeNum === 1) {
 			if (this.progress.seasonNum === 1) {
-				// no eps or seasons watched
+				// we are on first ep of first season
+				this.progress = {
+					seasonNum: 0,
+					episodeNum: 0,
+				}
+
+				await this._setEpisodesLeft()
 				return
 			}
 
-			// season(s) watched, but no eps of the current season
+			// we are on first episode of non-first season
 			this.progress.seasonNum--
-
-			// selecting season after decrement is important, since we need the length of the currentSeason
-			// _currentSeason is now 'the previous season' from when this func was called
-			this.progress.episodeNum = this._currentSeason.Episodes.length - 1
-
-			// update episodes left when progress changes
-			await this._setEpisodesLeft()
-			return
+			// currentSeason has now changed to the (when this function was called) previous season
+			this.progress.episodeNum = this._currentSeason.Episodes.length
 		}
 
-		// in the middle of season
+		// we are in the middle of a season
 		this.progress.episodeNum--
 
-		// update episodes left when progress changes
 		await this._setEpisodesLeft()
 	}
 
