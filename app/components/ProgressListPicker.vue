@@ -50,7 +50,7 @@ export default {
 			},
 			set(episodeNum) {
 				// can't go below 0
-				episodeNum = Math.max(0, val)
+				episodeNum = Math.max(0, episodeNum)
 
 				this.ep = episodeNum
 			},

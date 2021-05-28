@@ -12,9 +12,8 @@
 				@tap="close(true)"
 				:class="danger ? 'bg-danger' : 'bg-accent'"
 				class="text-accent-contrast"
+				>{{ okButtonText }}</Button
 			>
-				{{ okButtonText }}
-			</Button>
 		</ButtonWrapper>
 	</StackLayout>
 </template>
