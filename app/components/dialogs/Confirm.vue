@@ -5,15 +5,16 @@
 			<Label textWrap="true" class="message text-default">{{ message }}</Label>
 		</StackLayout>
 		<ButtonWrapper>
+			<Button col="0" row="0" class="text-default bg-alt" @tap="close(false)">{{ cancelButtonText }}</Button>
 			<Button
-				col="0"
+				col="2"
 				row="0"
 				@tap="close(true)"
 				:class="danger ? 'bg-danger' : 'bg-accent'"
 				class="text-accent-contrast"
-				>{{ okButtonText }}</Button
 			>
-			<Button col="2" row="0" class="text-default bg-alt" @tap="close(false)">{{ cancelButtonText }}</Button>
+				{{ okButtonText }}
+			</Button>
 		</ButtonWrapper>
 	</StackLayout>
 </template>

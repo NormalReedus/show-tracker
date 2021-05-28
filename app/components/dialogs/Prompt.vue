@@ -12,8 +12,8 @@
 			:hint="placeholderText"
 		/>
 		<ButtonWrapper>
-			<Button col="0" row="0" @tap="close(true)" class="text-accent-contrast bg-accent">{{ okButtonText }}</Button>
-			<Button col="2" row="0" class="text-default bg-alt" @tap="close(false)">{{ cancelButtonText }}</Button>
+			<Button col="0" row="0" class="text-default bg-alt" @tap="close(false)">{{ cancelButtonText }}</Button>
+			<Button col="2" row="0" @tap="close(true)" class="text-accent-contrast bg-accent">{{ okButtonText }}</Button>
 		</ButtonWrapper>
 	</StackLayout>
 </template>

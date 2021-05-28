@@ -22,7 +22,6 @@ export default {}
 }
 .add-show {
 	height: 70%;
-	// background: rgba(0, 0, 0, 0.1);
 	width: 65%;
 	flex-direction: column;
 	justify-content: center;

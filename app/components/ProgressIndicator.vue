@@ -2,19 +2,21 @@
 	<FlexboxLayout class="progress">
 		<FlexboxLayout class="progress-item">
 			<Label class="progress-item__label h6 text-uppercase text-default">Season</Label>
-			<Label class="progress-item__number h1 text-default">{{ lastWatched.seasonNum }}</Label>
+			<Label class="progress-item__number h1 text-default">{{ progress.seasonNum }}</Label>
 		</FlexboxLayout>
 		<FlexboxLayout class="progress-item">
 			<Label class="progress-item__label h6 text-uppercase text-default">Episode</Label>
-			<Label class="progress-item__number h1 text-default">{{ lastWatched.episodeNum }}</Label>
+			<Label class="progress-item__number h1 text-default">{{ progress.episodeNum }}</Label>
 		</FlexboxLayout>
 	</FlexboxLayout>
 </template>
 
 <script>
+//! create computed for episodeNum that displays a long dash if episodeNum === currentSeason.length
+//! this means the length will need to be passed in as well
 export default {
 	props: {
-		lastWatched: {
+		progress: {
 			type: Object,
 			required: true,
 		},
