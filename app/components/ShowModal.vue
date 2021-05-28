@@ -23,18 +23,20 @@
 
 		<FlexboxLayout class="data-section bg-default" width="100%">
 			<FlexboxLayout class="progress-container container">
-				<ProgressIndicator :lastWatched="show.lastWatched" class="modal-progress-indicator" />
+				<ProgressIndicator :progress="show.progress" class="modal-progress-indicator" />
 			</FlexboxLayout>
 			<MiscData class="container" :show="show" />
 		</FlexboxLayout>
 		<ButtonWrapper class="bg-default">
-			<Button col="0" row="0" @tap="setProgress" class="button text-accent-contrast bg-accent">Set progress</Button>
-			<Button col="2" row="0" class="button text-accent-contrast bg-danger" @tap="removeShow">Remove show</Button>
+			<Button col="0" row="0" class="button text-accent-contrast bg-danger" @tap="removeShow">Remove show</Button>
+			<Button col="2" row="0" @tap="setProgress" class="button text-accent-contrast bg-accent">Set progress</Button>
 		</ButtonWrapper>
 	</StackLayout>
 </template>
 
 <script>
+//! pass in the currentSeason length to progress indicator
+
 import ProgressListPicker from '@/components/ProgressListPicker'
 import ProgressIndicator from '@/components/ProgressIndicator'
 import ButtonWrapper from '@/components/ButtonWrapper'

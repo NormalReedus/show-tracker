@@ -36,6 +36,7 @@ class Group {
 		try {
 			await show.init(title)
 		} catch (err) {
+			//! catch this in vuex where addShow is called instead
 			console.error(err)
 			return `There was an error creating the show '${title}'.`
 		}

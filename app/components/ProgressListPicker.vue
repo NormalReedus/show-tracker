@@ -12,16 +12,19 @@
 			</FlexboxLayout>
 		</FlexboxLayout>
 		<ButtonWrapper class="bg-default">
-			<Button col="0" row="0" @tap="closeModal(true)" class="button text-accent-contrast bg-accent">Save</Button>
-			<Button col="2" row="0" @tap="closeModal(false)" class="button bg-alt">Cancel</Button>
+			<Button col="0" row="0" @tap="closeModal(false)" class="button bg-alt">Cancel</Button>
+			<Button col="2" row="0" @tap="closeModal(true)" class="button text-accent-contrast bg-accent">Save</Button>
 		</ButtonWrapper>
 	</FlexboxLayout>
 </template>
 
 <script>
+//! episode should "v-model" like seasons do, since episodes are now also 1 indexed
+//! but both will need to have a custom handler for seas / ep of 0, since that should not be + 1
+// this could be done in getters and setters
+
 import ButtonWrapper from '@/components/ButtonWrapper'
 
-// TODO: tilføj mulighed for enten at vælge sidste ep i en sæson eller hele sæson, for at signalere en hel sæson er set
 export default {
 	components: {
 		ButtonWrapper,
@@ -55,7 +58,7 @@ export default {
 
 		items() {
 			// the getter for is just pluralized from the property
-			// this.show.lastWatched.seasonNum => this.show.seasonNums, and the same for episodeNum(s)
+			// this.show.progress.seasonNum => this.show.seasonNums, and the same for episodeNum(s)
 			return this.show[this.property + 's']
 		},
 
@@ -80,8 +83,8 @@ export default {
 	},
 
 	created() {
-		this.seas = this.show.lastWatched.seasonNum
-		this.ep = this.show.lastWatched.episodeNum
+		this.seas = this.show.progress.seasonNum
+		this.ep = this.show.progress.episodeNum
 	},
 }
 </script>
