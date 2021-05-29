@@ -12,8 +12,6 @@
 </template>
 
 <script>
-//! create computed for episodeNum that displays a long dash if episodeNum === currentSeason.length
-//! this means the show will need to be passed in as well (for the prop to be reactive)
 export default {
 	props: {
 		show: {
@@ -28,7 +26,7 @@ export default {
 		},
 
 		displayEpisodeNum() {
-			if (this.progress.episodeNum === this.show.currentSeason.length) return '—'
+			if (this.progress.episodeNum === this.show.currentSeason.Episodes.length) return '—'
 
 			return this.progress.episodeNum
 		},

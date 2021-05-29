@@ -25,7 +25,6 @@
 </template>
 
 <script>
-//! pass in the show to progress indicator
 import ShowModal from '@/components/ShowModal'
 import ProgressIndicator from '@/components/ProgressIndicator'
 

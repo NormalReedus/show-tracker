@@ -35,8 +35,6 @@
 </template>
 
 <script>
-//! pass in the show to progress indicator
-
 import ProgressListPicker from '@/components/ProgressListPicker'
 import ProgressIndicator from '@/components/ProgressIndicator'
 import ButtonWrapper from '@/components/ButtonWrapper'

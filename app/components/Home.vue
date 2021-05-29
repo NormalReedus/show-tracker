@@ -22,7 +22,6 @@
 </template>
 
 <script>
-//TODO: just need to finish listPicker and test new seasons/eps. Then check for other Vue components that might need changes - all backend are done
 import Groups from '@/components/Groups'
 import Settings from '@/components/Settings'
 

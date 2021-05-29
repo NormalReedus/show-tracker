@@ -39,7 +39,8 @@
 	],
 	"scripts": {
 		"emu": "scripts/emulate",
-		"dev": "ns debug android --no-hmr"
+		"dev": "ns debug android --no-hmr",
+		"dev-brk": "ns debug android --no-hmr --debug-brk"
 	},
 	"dependencies": {
 		"@nativescript-community/ui-material-bottom-navigation": "^5.3.0",

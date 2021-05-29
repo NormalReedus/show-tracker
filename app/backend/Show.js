@@ -1,6 +1,6 @@
 const { getJson, omdbGet, tvmGetNextEpHref } = require('./services')
 
-// TODO: add something that displays if a show is done
+// TODO: add something that displays if a show is completely done
 // use both the prop from API that shows if the the show is running and whether the client is at the last episode and season with / without a next air date
 
 class Show {
@@ -23,13 +23,8 @@ class Show {
 	constructor() {
 		this.lastUpdated = Date.now()
 		this.progress = {
-			//! init as 0, 0
-			//! 0, 0 should display as 'Not started' or just 0, 0 in frontend and should be treated differently everywhere
-			//! that means that +1 will go directly to 1, 1 and -1 from there will go to 0, 0, but when at 0,0 there will be no looping through
-			//! season or anything like that, this behaviour should be intercepted in the top of every function - ALWAYS check if 0,0 is the state
-			//! and handle that differently than anything else
-			seasonNum: 0,
-			episodeNum: 0,
+			seasonNum: 0, // 0-indexed because of special s0
+			episodeNum: 0, // 1-indexed for everything, but handled specially for s0
 		}
 		this.favorite = false
 		// null props are set in init()
@@ -47,7 +42,6 @@ class Show {
 
 	//* SETTING / UPDATING PROPS
 
-	// no error handling here, this is done in Group
 	async init(title) {
 		// everything depends on this going first
 		const res = await omdbGet({ title })
@@ -127,7 +121,6 @@ class Show {
 		// start iterator on the current season, since there is no need to count episodes of a whole (previous) season that is already watched
 		// seasonNum is 1 indexed, so we init iterator to seasonNum - 1
 		// but if seasonNum is 0 (not even started), we also just start at index 0
-		//! use Math.max(0, this.progress.seasonNum - 1) to not go below index 0 if series is not even started
 		for (let i = Math.max(0, this.progress.seasonNum - 1); i < this.seasons.length; i++) {
 			epsInSeasons += this.seasons[i].Episodes.length
 		}
@@ -138,9 +131,8 @@ class Show {
 
 	//* SHORTCUTS
 
-	get _currentSeason() {
+	get currentSeason() {
 		// if we haven't started watching, current season is also just first season
-		//! if seasonNum === 0, return this.seasons[0]
 		if (this.progress.seasonNum === 0) {
 			return this.seasons[0]
 		}
@@ -150,7 +142,6 @@ class Show {
 
 	get _nextSeason() {
 		// returns null when on last season
-		//! if this.progress.seasonNum === this.seasons.length return null
 		if (this.progress.seasonNum === this.seasons.length) return null
 
 		// when seasonNum is 0 (not begun watching yet), next season is index 0 as well (the first season)
@@ -161,15 +152,7 @@ class Show {
 
 	// only used for _setNextRuntime
 	get _nextEpisode() {
-		//! if this.progress.episodeNum === this._currentSeason.Episodes.length
-		//! if !this._nextSeason - return nothing or null (depending on what nextRuntime wants)
-		//! then return this._nextSeason.Episodes[0]
-
-		//! if we are not on last ep of season, just return this._currentSeason.Episodes[this.progress.episodeNum] (current last / default line of this func)
-		//! this even holds true if we are not begun (0, 0), since season 0 can only have ep 0, and currentSeason in that case actually returns season 1 as current,
-		//! where season 1 episode index 0 is the actual next episode
-
-		if (this.progress.episodeNum === this._currentSeason.Episodes.length) {
+		if (this.progress.episodeNum === this.currentSeason.Episodes.length) {
 			if (!this._nextSeason) {
 				// we are on last episode of last season
 				return null
@@ -182,14 +165,11 @@ class Show {
 		// we are not on last episode of season
 		// the following line even holds true if we have not begun watching (s0, e0), since s0 can only have e0, and currentSeason in that case actually returns s1,
 		// where s1 episode index 0 is the actual next episode
-		return this._currentSeason.Episodes[this.progress.episodeNum]
+		return this.currentSeason.Episodes[this.progress.episodeNum]
 	}
 
 	// returns a list of season numbers for the frontend
 	get seasonNums() {
-		// const indices = this.seasons.map((_, index) => index + 1)
-		//! rewrite to for(let i = 0 .... .length)
-
 		// array of season numbers from 0 (not begun watching) to last season
 		const nums = []
 		// 0 and .length included, since seasonNums are actually 1-indexed, but 0 has semantic meaning
@@ -203,22 +183,15 @@ class Show {
 	getSeasonEpisodeNums(seasonNum) {
 		// if user is trying to say they have watched nothing
 		// don't allow anything but 'nothing' as the episode either
-		//! if seasonNum === 0
-		//! return [0]
 		if (seasonNum === 0) return [0]
 
-		//! const seasonLength = this.seasons[seasonNum - 1].Episodes.length
-		// const seasonEps = this.seasons[seasonNum - 1].Episodes
-		//! return index + 1, but do it exactly like in seasonNums with the for loop instead: rewrite to for(let i = 0 .... seasonLength)
-		// return seasonEps.map((_, index) => index)
-
-		// this is not _currentSeason, since seasonNum is passed in from user
+		// this is not currentSeason, since seasonNum is passed in from user
 		const seasonLength = this.seasons[seasonNum - 1].Episodes.length
 
 		// array of episode numbers from 1 to last ep of season
 		const nums = []
 		// 0 not included since it is already handled in the top statement of this function
-		for (let i = 1; i <= this.seasonLength; i++) {
+		for (let i = 1; i <= seasonLength; i++) {
 			nums.push(i)
 		}
 
@@ -256,7 +229,6 @@ class Show {
 	async setProgress({ seas, ep }) {
 		this.update()
 
-		//! change this block to only allow ep 0 on seas 0 instead of on length+1
 		// setting s0 (not begun watching) only allows e0
 		if (seas === 0) {
 			this.progress = {
@@ -269,10 +241,9 @@ class Show {
 		}
 
 		// no season under 1 (0 is handled above) or above the number of seasons available
-		//! if seas < 1 || seas > this.seasons.length: return
 		if (seas < 1 || seas > this.seasons.length) return
 
-		// no eps under 1 or higher than season length //! change to ep < 1 and seasonLength (not -1) - both in comment and code
+		// no eps under 1 or higher than season length
 		if (ep < 1 || ep > this.seasons[seas - 1].Episodes.length) return
 
 		this.progress = {
@@ -287,8 +258,6 @@ class Show {
 	async watchEpisode() {
 		this.update()
 
-		//! if this.progress.seasonNum === 0
-		//! set seasonNum and episodeNum to 1 and _setEpisodesLeft and return
 		if (this.progress.seasonNum === 0) {
 			// we haven't started watching
 			this.progress = {
@@ -299,14 +268,8 @@ class Show {
 			return
 		}
 
-		const seasonLength = this._currentSeason.Episodes.length
+		const seasonLength = this.currentSeason.Episodes.length
 
-		//! if this.progress.episodeNum === seasonLength
-		//! if !this._nextSeason // _nextSeason is always false on last season
-		//! return
-		//! increment season, set ep to 1
-		//! _setEpisodesLeft
-		//! increment episodeNum
 		if (this.progress.episodeNum === seasonLength) {
 			// _nextSeason is always falsy on last season
 			if (!this._nextSeason) {
@@ -331,15 +294,6 @@ class Show {
 	async unwatchEpisode() {
 		this.update()
 
-		//! if season === 0 return
-
-		//! if episode === 1
-		//! if season === 1
-		//! set season to 0 and ep to 0 and _setEpisodesLeft and return
-		//! decrement this.progress.seasonNum and AFTERWARDS set this.progress.episode to this._currentSeason.Episodes.length
-		//! _setEpisodesLeft
-		//! decrement this.progress.episodeNum
-
 		// haven't started watching - can't go lower
 		if (this.progress.seasonNum === 0) return
 
@@ -358,7 +312,7 @@ class Show {
 			// we are on first episode of non-first season
 			this.progress.seasonNum--
 			// currentSeason has now changed to the (when this function was called) previous season
-			this.progress.episodeNum = this._currentSeason.Episodes.length
+			this.progress.episodeNum = this.currentSeason.Episodes.length
 		}
 
 		// we are in the middle of a season
