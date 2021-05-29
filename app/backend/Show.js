@@ -1,8 +1,5 @@
 const { getJson, omdbGet, tvmGetNextEpHref } = require('./services')
 
-// TODO: add something that displays if a show is completely done
-// use both the prop from API that shows if the the show is running and whether the client is at the last episode and season with / without a next air date
-
 class Show {
 	// how often to check for new data (so we don't make requests on all interactions)
 	static UPDATE_INTERVAL_HOURS = 6
@@ -105,7 +102,7 @@ class Show {
 	async _setNextRuntime() {
 		const nextEp = this._nextEpisode
 		if (!nextEp) {
-			this.nextRuntime = false
+			this.nextRuntime = null
 			return
 		}
 
@@ -220,15 +217,13 @@ class Show {
 
 		await Promise.all([this._setNextAirDate(), this._setSeasons()])
 
-		// Await the last block to make sure update() always finished completely when awaited
+		// await the last block to make sure update() always finishes completely when awaited
 		await Promise.all([this._setNextRuntime(), this._setEpisodesLeft()])
 
 		this.lastUpdated = Date.now()
 	}
 
 	async setProgress({ seas, ep }) {
-		this.update()
-
 		// setting s0 (not begun watching) only allows e0
 		if (seas === 0) {
 			this.progress = {
@@ -236,7 +231,12 @@ class Show {
 				episodeNum: 0,
 			}
 
-			await this._setEpisodesLeft()
+			await Promise.all([
+				// always update episodes left (even if update does not run)
+				this._setEpisodesLeft(),
+				// always find next episode's runtime (even if update does not run)
+				this._setNextRuntime(),
+			])
 			return
 		}
 
@@ -251,20 +251,28 @@ class Show {
 			episodeNum: ep,
 		}
 
-		// always update episodes left (even if update does not run)
-		await this._setEpisodesLeft()
+		await Promise.all([
+			// always update episodes left (even if update does not run)
+			this._setEpisodesLeft(),
+			// always find next episode's runtime (even if update does not run)
+			this._setNextRuntime(),
+		])
 	}
 
 	async watchEpisode() {
-		this.update()
-
 		if (this.progress.seasonNum === 0) {
 			// we haven't started watching
 			this.progress = {
 				seasonNum: 1,
 				episodeNum: 1,
 			}
-			await this._setEpisodesLeft()
+
+			await Promise.all([
+				// always update episodes left (even if update does not run)
+				this._setEpisodesLeft(),
+				// always find next episode's runtime (even if update does not run)
+				this._setNextRuntime(),
+			])
 			return
 		}
 
@@ -281,19 +289,27 @@ class Show {
 			this.progress.seasonNum++
 			this.progress.episodeNum = 1
 
-			await this._setEpisodesLeft()
+			await Promise.all([
+				// always update episodes left (even if update does not run)
+				this._setEpisodesLeft(),
+				// always find next episode's runtime (even if update does not run)
+				this._setNextRuntime(),
+			])
 			return
 		}
 
 		// we are in the middle of a season
 		this.progress.episodeNum++
 
-		await this._setEpisodesLeft()
+		await Promise.all([
+			// always update episodes left (even if update does not run)
+			this._setEpisodesLeft(),
+			// always find next episode's runtime (even if update does not run)
+			this._setNextRuntime(),
+		])
 	}
 
 	async unwatchEpisode() {
-		this.update()
-
 		// haven't started watching - can't go lower
 		if (this.progress.seasonNum === 0) return
 
@@ -305,7 +321,12 @@ class Show {
 					episodeNum: 0,
 				}
 
-				await this._setEpisodesLeft()
+				await Promise.all([
+					// always update episodes left (even if update does not run)
+					this._setEpisodesLeft(),
+					// always find next episode's runtime (even if update does not run)
+					this._setNextRuntime(),
+				])
 				return
 			}
 
@@ -318,7 +339,12 @@ class Show {
 		// we are in the middle of a season
 		this.progress.episodeNum--
 
-		await this._setEpisodesLeft()
+		await Promise.all([
+			// always update episodes left (even if update does not run)
+			this._setEpisodesLeft(),
+			// always find next episode's runtime (even if update does not run)
+			this._setNextRuntime(),
+		])
 	}
 
 	toggleFavorite() {

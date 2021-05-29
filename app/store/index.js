@@ -311,7 +311,7 @@ const store = new Vuex.Store({
 			dispatch('updateShows')
 		},
 
-		// fetch new seasons, data about next episode airdate etc
+		// fetch new seasons, data about next episode airdate etc if enough time has passed
 		async updateShows({ state }) {
 			const promises = []
 
@@ -340,7 +340,7 @@ const store = new Vuex.Store({
 		},
 
 		// only on launch - take json from application-settings and load like when importing groups (with overwrite)
-		loadData({ commit }) {
+		loadData({ dispatch, commit }) {
 			// return null if there is nothing in application-settings
 			const jsonData = getString(STORAGE_KEY, null)
 			if (!jsonData) return
@@ -351,7 +351,7 @@ const store = new Vuex.Store({
 			commit('overwriteGroups', groups)
 
 			// updating is done after loading data, but saves data when done
-			store.dispatch('updateShows')
+			dispatch('updateShows')
 		},
 	},
 })
