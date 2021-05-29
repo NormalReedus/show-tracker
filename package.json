@@ -4,7 +4,7 @@
 		"id": "normalreedus.showtracker"
 	},
 	"main": "app/app.js",
-	"version": "1.0.1",
+	"version": "2.0.0",
 	"description": "An android app for tracking your watching progress of shows.",
 	"author": "Magnus Bendix Borregaard",
 	"license": "MIT",
