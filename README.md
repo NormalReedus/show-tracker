@@ -4,7 +4,7 @@ An Android app for keeping track of the shows you watch.
 ## Features
 ### Groups
 The app can keep track of shows being watched by dividing them into distinct groups. For example, a group of shows could be tied to 'Me' or 'The kids' to signify who's watching which shows (and if they do so together) and allow for separate tracking of progress.
-Every group will then display a list of shows by their poster. These groups can be **created**, **moved around**, **renamed**, **deleted**, **exported**, and **imported** (incl. the shows) from the tab with the gear icon.
+Every group will then display a list of shows and their poster. These groups can be **created**, **moved around**, **renamed**, **deleted**, **exported**, and **imported** (incl. the shows) from the tab with the gear icon.
 
 ### Shows
 Shows can be **added** to a group by tapping the placeholder poster with the text 'ADD SHOW' in the shows tab, and can be **removed** by tapping a show's poster and tapping 'Remove show'.
