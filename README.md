@@ -37,3 +37,12 @@ Be aware that all of this data comes from OMDB and TVMaze, and therefore I canno
 - **Framework:** NativeScript Vue
 - **Data:** OMDB (primarily) and TVMaze (extra show information)
 
+## Screenshots
+### Icon
+<img src="screenshots/icon.jpg" width="350" title="Icon">
+
+### Shows page
+<img src="screenshots/shows.jpg" width="350" title="Icon">
+
+### Settings page
+<img src="screenshots/settings.jpg" width="350" title="Icon">
